@@ -32,7 +32,7 @@ if (!empty($_COOKIE['user'])) {
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
 
 		<title>MUSIC OF THE SPHERES</title>
 		<meta charset="UTF-8">
@@ -43,7 +43,7 @@ if (!empty($_COOKIE['user'])) {
     <!-- MUNDO IZQUIERDO -> MENSAJES PERSONALES -->
     <a href="#"><div id ="mainpanelleft" class="panel">
       <div class="login-form">
-        <h3 class="panel-content"> Mensajes Personales </h3>
+        <h3 class="panel-content"> Mensajes Personales <span class="label label-default" id="label-mercury">3</span></h3>
       </div>
     </div></a>
     <!-- END MUNDO IZQUIERDO -> MENSAJES PERSONALES -->
@@ -51,7 +51,7 @@ if (!empty($_COOKIE['user'])) {
     <!-- MUNDO IZQUIERDO -> MENSAJES GLOBALES -->
     <a href="#"><div class="panel" id ="mainpanelcenter">
       <div class="login-form">
-        <h3 class="panel-content"> Mensajes Globales </h3>
+        <h3 class="panel-content"> Mensajes Globales <span class="label label-default" id="label-mars">10</span> </h3>
       </div>
     </div></a>
     <!-- END MUNDO IZQUIERDO -> MENSAJES GLOBALES -->
@@ -59,7 +59,7 @@ if (!empty($_COOKIE['user'])) {
     <!-- MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
     <a href="#"><div class="panel" id ="mainpanelright">
       <div class="login-form">
-        <h3 class="panel-content"> Mensajes Grupales </h3>
+        <h3 class="panel-content"> Mensajes Grupales <span class="label label-default" id="label-moon">5</span></h3>
       </div>
     </div></a>
     <!--  END MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
