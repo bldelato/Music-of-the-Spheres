@@ -115,7 +115,12 @@ body, html {
     animation-direction: reverse;
 }
 
+.form-control::-moz-placeholder {
+    font-size: 23px;
+}
+
 .panel {
+    font-weight: bold;
     font-size: 1.3em;
     position: absolute;
     background-image: url('../img/planetas/mars.jpg');
