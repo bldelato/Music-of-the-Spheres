@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /MS/
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+RewriteRule /login  login.html
+RewriteRule /index  index.php
+RewriteRule /register  register.php

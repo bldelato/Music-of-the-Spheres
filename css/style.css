@@ -4,19 +4,72 @@
 
 /*
 * {
-    cursor: url(../img/nave.gif), auto;
-}*/
-
+    cursor: url(../img/sol.png), auto;
+}
+*/
 body, html {
     padding: 0px;
     margin: 0px;
     height: 100%;
     width: 100%;
+    overflow: hidden;
+    font-family: 'Amatic SC', cursive !important;
+}
+
+/************************* MAIN PAGE ***************************/
+
+#mainbody {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  background-image: url('../img/galaxy.jpg');
+  background-repeat: repeat;
+}
+
+#mainpanelleft {
+  background-image: url('../img/planetas/mercury.jpg');
+  float: left;
+  display: inline-block;
+  margin: -150px 0 0 -600px;
+  width: 300px;
+  height: 300px;
+  padding: 70px;
+  padding-top: 60px;
+}
+
+#mainpanelcenter {
+  background-image: url('../img/planetas/venus.jpg');
+  /*float: right;*/
+  display: inline-block;
+  margin: -150px 0 0 -150px;
+  width: 300px;
+  height: 300px;
+  padding: 70px;
+  padding-top: 60px;
 }
 
 
-/*LOG IN PAGE*/
+#mainpanelright {
+  background-image: url('../img/planetas/moon.jpg');
+  float: right;
+  display: inline-block;
+  margin: -150px 0 300px 290px;
+  width: 300px;
+  height: 300px;
+  padding: 70px;
+  padding-top: 60px;
+}
 
+.panel-content {
+  padding-top: 15px;
+  padding-left: -10px;
+  padding-bottom: 45px;
+  color: white;
+  font-size: 50px;
+  padding-right: 5px;
+}
+
+/************************* LOG IN PAGE ***************************/
 
 /*
 #form-style {
@@ -54,7 +107,7 @@ body, html {
     }
 }
 
-#login-form {
+.login-form {
     animation-name: rotate;
     animation-duration: 50s;
     animation-timing-function: linear;
@@ -63,10 +116,9 @@ body, html {
 }
 
 .panel {
-    font-family: 'Nimbus Sans L';
     font-size: 1.3em;
     position: absolute;
-    background-image: url('../img/mars.jpg');
+    background-image: url('../img/planetas/mars.jpg');
     background-position: center;
     background-size: 100%;
     box-shadow: inset 0px 0px 5px 5px black;
