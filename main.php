@@ -17,6 +17,14 @@ if (!empty($_SESSION['user'])) {
       header('Location: login.php');
 }
 
+if(!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminartipo' && !empty($_POST['tipoparaeliminar'])){
+  $type = $_POST['tipoparaeliminar'];
+  echo $type;
+
+  $sql = "DELETE FROM `musictypes` WHERE id='$user' AND type='$type'".
+  $consulta = mysqli_query($db, $sql);
+}
+
 $sql = "SELECT * FROM `messages` WHERE iddestination='$user'";
 $consulta = mysqli_query($db, $sql);
 
@@ -28,6 +36,11 @@ while ($row = mysqli_fetch_row($consulta)) {
     }
   }
 }
+
+$sql = "SELECT age FROM `users` WHERE id='$user'";
+$consulta = mysqli_query($db, $sql);
+$edad = mysqli_fetch_assoc($consulta);
+
 
 $sql = "SELECT DISTINCT * FROM `musictypes` WHERE type NOT IN (SELECT type FROM `musictypes` WHERE id='$user') OR id='$user'";
 $consulta = mysqli_query($db, $sql);
@@ -47,9 +60,11 @@ while ($row = mysqli_fetch_row($consulta)) {
 <html lang="es" class="particlesbody">
 	<head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <link rel="stylesheet" media="screen" type="text/css" href="lib/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
+    <link rel="stylesheet" media="screen" type="text/css" href="lib/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
 		<link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
@@ -76,54 +91,92 @@ while ($row = mysqli_fetch_row($consulta)) {
 
     <!-- PERFIL -->
     <div id="collapseperfil" class="panel-collapse collapse">
+
       <div class="panel-heading panel-title">PERFIL</div>
+
+      <!-- PANEL BODY -->
       <div class="panel-body">
-        <h4>Estilos de música<h4>
-          <table class="table table-hover table-condensed table-responsive">
-              <thead>
-                  <tr>
-                    <th class="personaltitles">Tipo añadido</th>
-                  </tr>
-              </thead>
-              <tbody>
-          <?php
-            $i=0;
-            if(empty($addedtypes)){
-              echo "No tienes ningún tipo de música preferido. Si quieres puedes añadir uno haciendo click abajo.";
-            }
-            while(isset($addedtypes[$i])){
-              echo "<tr>
-                  <td onclick='mostrar_eliminartipo( \"{$addedtypes[$i][0]}\")' class='pointercursor'>{$addedtypes[$i][0]}</td>
-                </tr>";
 
-              ++$i;
-            }?>
-        </tbody>
-      </table>
+      <!-- ACCORDION -->
+        <div class="panel-group" id="accordion">
 
-      <table class="table table-hover table-condensed table-responsive">
-          <thead>
-              <tr>
-                <th class="personaltitles">Tipos para añadir</th>
-              </tr>
-          </thead>
-          <tbody>
-      <?php
-        $i=0;
-        if(empty($addedtypes)){
-          echo "No tienes ningún tipo de música preferido. Si quieres puedes añadir uno haciendo click abajo.";
-        }
-        while(isset($nonaddedtypes[$i])){
-          echo "<tr>
-              <td >{$nonaddedtypes[$i][0]}</td>
-            </tr>";
+          <!-- PART 1 ACCORDION-->
+          <div class="panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title  perfil-panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Estilos de música</a>
+              </h4>
+            </div>
+            <div id="collapse1" class="panel-collapse collapse">
+              <div class="panel-body">
+                <table class="table table-hover table-condensed table-responsive">
+                    <thead>
+                        <tr>
+                          <th class="personaltitles">Tipo añadido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                        $i=0;
+                        if(empty($addedtypes)){
+                          echo "<tr >
+                              <td>No tienes ningún tipo de música preferido. Si quieres puedes añadir uno haciendo click en los estilos de abajo.</td>
+                            </tr>";
+                        }
+                        while(isset($addedtypes[$i])){
+                          echo "<tr >
+                              <td onclick='mostrar_eliminartipo( \"{$addedtypes[$i][0]}\")' class='pointercursor myModalmessage'>{$addedtypes[$i][0]}</td>
+                            </tr>";
+                          ++$i;
+                        }
+                      ?>
+                    </tbody>
+                  </table>
+                  <table class="table table-hover table-condensed table-responsive">
+                    <thead>
+                        <tr>
+                          <th class="personaltitles">Tipos para añadir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                        $i=0;
+                        if(empty($nonaddedtypes)){
+                          echo "No tienes ningún tipo de música sin añadir. Eres todo un melómano!";
+                        }
+                        while(isset($nonaddedtypes[$i])){
+                          echo "<tr>
+                              <td  class='pointercursor myModalmessage' onclick='mostrar_añadirtipo(\"{$nonaddedtypes[$i][0]}\")'>{$nonaddedtypes[$i][0]}</td>
+                            </tr>";
+                          ++$i;
+                        }
+                      ?>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+            <!-- END PART 1 ACCORDION-->
 
-          ++$i;
-        }?>
-    </tbody>
-  </table>
+            <!-- PART 2 ACCORDION-->
+            <div class="panel-default">
+             <div class="panel-heading">
+               <h4 class="panel-title  perfil-panel-title">
+                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Edad</a>
+               </h4>
+             </div>
+             <div id="collapse2" class="panel-collapse collapse">
+               <div class="panel-body personaltitles myModalmessage">
+                 Tienes <?php echo $edad['age'];?> años.
+               </div>
+             </div>
+           </div>
+            <!-- END PART 2 ACCORDION-->
+        </div>
+        <!-- END ACCORDION -->
       </div>
-      <div class="panel-footer">Edad</div>
+      <!-- END PANEL BODY -->
+
     </div>
     <!-- END PERFIL -->
 
@@ -132,13 +185,13 @@ while ($row = mysqli_fetch_row($consulta)) {
         $('#tipoaeliminar').html(tipoaeliminar);
         $('#erasetypemodal').modal();
       }
-      function mostrar_añadirtipo(replydestination){
-        $('#replydestination').val(replydestination);
-        $('#erasetypemodal').modal();
+      function mostrar_añadirtipo(tipoaañadir){
+        $('#tipoaañadir').html(tipoaañadir);
+        $('#addtypemodal').modal();
       }
     </script>
 
-    <!-- Modal  ELIMINAR MENSAJE-->
+    <!-- Modal  ELIMINAR TIPO-->
     <div id="erasetypemodal" class="modal fade myModalmessage" role="dialog">
     <div class="modal-dialog">
 
@@ -150,7 +203,8 @@ while ($row = mysqli_fetch_row($consulta)) {
         <div class="modal-body">
           <form action="" method="POST" id="formerasetype">
             <div class="panel-body form-group form">
-                ¿Estás seguro de querer eliminar <span id="tipoaeliminar" class="text-danger"></span> de tu lista de música?
+                ¿Estás seguro de querer eliminar <span id="tipoaeliminar" class="text-danger musictype"></span> de tu lista de música?
+                <input type="hidden" class="form-control" name="eliminar" value="eliminartipo">
             </div>
           </form>
         </div>
@@ -162,8 +216,32 @@ while ($row = mysqli_fetch_row($consulta)) {
   </div>
   <!--END  Modal content-->
 
+  <!-- Modal  AÑADIR TIPO-->
+  <div id="addtypemodal" class="modal fade myModalmessage" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title message-title">Añadir TIPO DE MÚSICA </h4>
+      </div>
+      <div class="modal-body">
+        <form action="" method="POST" id="formerasetype">
+          <div class="panel-body form-group form">
+              ¿Estás seguro de querer añadir <span id="tipoaañadir" class="text-success musictype"></span> a tu lista de música?
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default error-button-close" form="formerasetype">Añadir</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END  Modal content-->
+
     <!-- MUNDO IZQUIERDO -> MENSAJES PERSONALES -->
-    <a href="mpersonal"><div id ="mainpanelleft" class="panel main-panel">
+    <a href="mpersonal"><div id ="mainpanelleft" class="panel panelplanet main-panel">
       <div class="login-form">
         <h3 class="panel-content"> Mensajes Personales <span class="label label-default" id="label-mercury"><?php echo $noleidospersonales; ?></span></h3>
       </div>
@@ -171,7 +249,7 @@ while ($row = mysqli_fetch_row($consulta)) {
     <!-- END MUNDO IZQUIERDO -> MENSAJES PERSONALES -->
 
     <!-- MUNDO IZQUIERDO -> MENSAJES GLOBALES -->
-    <a href="mglobal"><div class="panel main-panel" id ="mainpanelcenter">
+    <a href="mglobal"><div class="panel panelplanet main-panel" id ="mainpanelcenter">
       <div class="login-form">
         <h3 class="panel-content"> Mensajes Globales </h3>
       </div>
@@ -179,7 +257,7 @@ while ($row = mysqli_fetch_row($consulta)) {
     <!-- END MUNDO IZQUIERDO -> MENSAJES GLOBALES -->
 
     <!-- MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
-    <a href="#"><div class="panel main-panel" id ="mainpanelright">
+    <a href="#"><div class="panel panelplanet main-panel" id ="mainpanelright">
       <div class="login-form">
         <h3 class="panel-content"> Mensajes Grupales <span class="label label-default" id="label-moon">5</span></h3>
       </div>

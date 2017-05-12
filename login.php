@@ -104,7 +104,7 @@ function mostrar_error() {
 		<script src="js/particles.js"></script>
 		<script src="js/app.js"></script>
 
-		<div class="panel">
+		<div class="panel panelplanet">
 			<?php
       	mostrar_formulario();
 			?>

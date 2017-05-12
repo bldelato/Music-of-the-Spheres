@@ -166,7 +166,7 @@ function mostrar_error_register() {
 		<script src="js/particles.js"></script>
 		<script src="js/app.js"></script>
 
-		<div class="panel" id="registerpanel">
+		<div class="panel panelplanet" id="registerpanel">
 
       <?php
         mostrar_formulario();
