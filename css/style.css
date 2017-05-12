@@ -9,13 +9,32 @@
 }
 */
 
+.particlesbody {
+    height: 100% !important;
+    width: 100% !important;
+    overflow-y: hidden !important;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
 body, html {
     padding: 0px;
     margin: 0px;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
+    margin-bottom: 20px;
+    overflow-x: hidden;
+    font-family: 'Lobster Two', cursive !important;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-family: 'Poiret One', cursive !important;
     font-family: 'Amatic SC', cursive !important;
+}
+
+.barraBasica {
+    font-size: 40px !important;
+    color: #a9b6c1;
+}
+
+li i:hover {
+    color: black !important;
 }
 
 
@@ -38,17 +57,18 @@ body, html {
     height: 300px;
     padding: 70px;
     padding-top: 60px;
+    top: 50% !important;
 }
 
 #mainpanelcenter {
     background-image: url('../img/planetas/venus.jpg');
-    /*float: right;*/
     display: inline-block;
     margin: -150px 0 0 -150px;
     width: 300px;
     height: 300px;
     padding: 70px;
     padding-top: 60px;
+    top: 50% !important;
 }
 
 #mainpanelright {
@@ -60,6 +80,7 @@ body, html {
     height: 300px;
     padding: 70px;
     padding-top: 60px;
+    top: 50% !important;
 }
 
 .panel-content {
@@ -70,6 +91,10 @@ body, html {
     font-size: 50px;
     padding-right: 0px;
     text-shadow: 0px 5px 10px #000000;
+}
+
+.main-panel {
+    top: 65% !important;
 }
 
 .label {
@@ -85,17 +110,68 @@ body, html {
     background-color: #A7C7CC;
 }
 
+#collapseperfil{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top:10px;
+  background-color: rgba(180, 185, 185, 0.99);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  z-index:999;
+  position: sticky ;
+}
+
+.panel-title{
+  text-align: center;
+  font-size: 24px;
+  color:white;
+}
+
+.panel-body{
+  padding-top: 0px;
+
+}
+
+
+/************************* REGISTER PAGE ***************************/
+
+#registerpanel {
+    background-image: url('../img/planetas/pluton-planeta.jpg');
+    font-size: 20px;
+    margin: -200px 0 0 -200px;
+    width: 400px;
+    height: 400px;
+    padding: 100px;
+    padding-top: 60px;
+    border-radius: 500px;
+}
+
+#form-style-register {
+    padding-top: 20px;
+}
+
+#enlace-login {
+    z-index: 100;
+    display: block;
+    animation: none;
+    top: calc(50% + 150px);
+    left: calc(50% - 150px);
+    padding: 70px;
+    padding-top: 60px;
+    position: absolute;
+    font-size: 25px;
+    width: 300px;
+    text-align: center;
+    color: #8795a0;
+    font-weight: bold;
+}
+
 
 /************************* LOG IN PAGE ***************************/
 
-
-/*
-#form-style {
-    text-align: center;
-    padding-top: 80px;
-}*/
-
-#myModal {
+.myModal {
     font-size: 25px;
     margin-top: 10%;
 }
@@ -149,7 +225,23 @@ body, html {
 }
 
 .form-control {
-    font-size: 23px;
+    font-size: 20px;
+}
+
+#enlace-registro {
+    z-index: 100;
+    display: block;
+    animation: none;
+    top: calc(50% + 90px);
+    left: calc(50% - 150px);
+    padding: 70px;
+    padding-top: 60px;
+    position: absolute;
+    font-size: 25px;
+    width: 300px;
+    text-align: center;
+    color: #8795a0;
+    font-weight: bold;
 }
 
 .panel {
@@ -176,4 +268,68 @@ body, html {
     animation-duration: 50s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
+}
+
+
+/************************* PERSONAL MESSAGES PAGE ***************************/
+
+.personaltable {
+    color: white;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 5%;
+    font-size: x-large;
+    text-align: center;
+    width: 70%;
+}
+
+.personaltitles {
+    text-align: center;
+}
+
+.table-hover tbody tr:hover td {
+    background: white;
+    color: black;
+}
+
+.message-title {
+    font-size: 25px;
+}
+
+.myModalmessage {
+    font-size: 25px;
+}
+
+.btn-primary {
+    margin-left: 45% !important;
+    margin-right: 45% !important;
+    color: #fff;
+    background-color: #4c4d4e;
+    border-color: #656a6f;
+    vertical-align: top;
+    font-size: 25px;
+}
+
+#th-leido {
+    width: 100px;
+}
+
+#th-responder {
+    width: 80px;
+}
+
+.pointercursor {
+    cursor: pointer;
+}
+
+.defaultcursor {
+    cursor: default;
+}
+
+.nav-tabs.nav-justified {
+    margin-top: 20px;
+    width: 80%;
+    margin-left: 10%;
+    font-size: 25px;
+    font-weight: bold;
 }

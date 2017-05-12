@@ -1,10 +1,12 @@
 Options +FollowSymLinks
 RewriteEngine On
-RewriteBase /MS/
+RewriteBase /MS
 
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f
 
-RewriteRule /login  login.html
-RewriteRule /index  index.php
-RewriteRule /register  register.php
+RewriteRule login  login.php
+RewriteRule main  main.php
+RewriteRule register  register.php
+RewriteRule mpersonal  mpersonal.php
+RewriteRule mglobal  mglobal.php
