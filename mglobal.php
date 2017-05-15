@@ -154,7 +154,6 @@ function mostrar_errornotcomplete() {
           <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" title="Perfil"><i class="icono-user"></i></a></li>
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>
       </ul>
     </div>

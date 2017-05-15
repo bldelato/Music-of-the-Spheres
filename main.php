@@ -19,9 +19,15 @@ if (!empty($_SESSION['user'])) {
 
 if(!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminartipo' && !empty($_POST['tipoparaeliminar'])){
   $type = $_POST['tipoparaeliminar'];
-  echo $type;
 
-  $sql = "DELETE FROM `musictypes` WHERE id='$user' AND type='$type'".
+  $sql = "DELETE FROM `musictypes` WHERE id='$user' AND type='$type'";
+  $consulta = mysqli_query($db, $sql);
+}
+
+if(!empty($_POST['añadir']) && $_POST['añadir']=='añadirtipo' && !empty($_POST['tipoparaañadir'])){
+  $type = $_POST['tipoparaañadir'];
+
+  $sql = "INSERT INTO `musictypes`(`type`, `id`) VALUES ('$type', '$user')";
   $consulta = mysqli_query($db, $sql);
 }
 
@@ -37,22 +43,30 @@ while ($row = mysqli_fetch_row($consulta)) {
   }
 }
 
-$sql = "SELECT age FROM `users` WHERE id='$user'";
+$sql = "SELECT * FROM `users` WHERE id='$user'";
 $consulta = mysqli_query($db, $sql);
-$edad = mysqli_fetch_assoc($consulta);
+$usuario = mysqli_fetch_assoc($consulta);
 
 
 $sql = "SELECT DISTINCT * FROM `musictypes` WHERE type NOT IN (SELECT type FROM `musictypes` WHERE id='$user') OR id='$user'";
 $consulta = mysqli_query($db, $sql);
+$addedtypes=[];
+$nonaddedtypes=[];
 
-while ($row = mysqli_fetch_row($consulta)) {
-  if($row[1]==$user){
-    $addedtypes[] = $row;
+while ($row = mysqli_fetch_assoc($consulta)) {
+  if($row['id']==$user){
+    if(!in_array($row['type'],$addedtypes)){
+      $addedtypes[] = $row['type'];
+    }
   }
   else{
-    $nonaddedtypes[]=$row;
+    if(!in_array($row['type'],$nonaddedtypes)){
+    $nonaddedtypes[]=$row['type'];
+    }
   }
 }
+
+
 
 ?>
 
@@ -112,7 +126,7 @@ while ($row = mysqli_fetch_row($consulta)) {
                 <table class="table table-hover table-condensed table-responsive">
                     <thead>
                         <tr>
-                          <th class="personaltitles">Tipo añadido</th>
+                          <th class="personaltitles" colspan="2">Tipo añadido</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -120,12 +134,13 @@ while ($row = mysqli_fetch_row($consulta)) {
                         $i=0;
                         if(empty($addedtypes)){
                           echo "<tr >
-                              <td>No tienes ningún tipo de música preferido. Si quieres puedes añadir uno haciendo click en los estilos de abajo.</td>
+                              <td class='musictype_row'>No tienes ningún tipo de música preferido. Si quieres puedes añadir uno haciendo click en los estilos de abajo.</td>
                             </tr>";
                         }
                         while(isset($addedtypes[$i])){
-                          echo "<tr >
-                              <td onclick='mostrar_eliminartipo( \"{$addedtypes[$i][0]}\")' class='pointercursor myModalmessage'>{$addedtypes[$i][0]}</td>
+                          echo "<tr>
+                              <td class='defaultcursor myModalmessage'>{$addedtypes[$i]}</td>
+                              <td class='th_responder pointercursor myModalmessage' onclick='mostrar_eliminartipo(\"{$addedtypes[$i]}\")'><i class='icono-trash pointercursor'></i></td>
                             </tr>";
                           ++$i;
                         }
@@ -135,18 +150,21 @@ while ($row = mysqli_fetch_row($consulta)) {
                   <table class="table table-hover table-condensed table-responsive">
                     <thead>
                         <tr>
-                          <th class="personaltitles">Tipos para añadir</th>
+                          <th class="personaltitles" colspan="2">Tipos para añadir</th>
                         </tr>
                     </thead>
                     <tbody>
                       <?php
                         $i=0;
                         if(empty($nonaddedtypes)){
-                          echo "No tienes ningún tipo de música sin añadir. Eres todo un melómano!";
+                          echo "<tr >
+                              <td class='musictype_row'>No tienes ningún tipo de música sin añadir. Eres todo un melómano!</td>
+                            </tr>";
                         }
                         while(isset($nonaddedtypes[$i])){
                           echo "<tr>
-                              <td  class='pointercursor myModalmessage' onclick='mostrar_añadirtipo(\"{$nonaddedtypes[$i][0]}\")'>{$nonaddedtypes[$i][0]}</td>
+                              <td  class='defaultcursor myModalmessage'>{$nonaddedtypes[$i]}</td>
+                              <td  class='th_responder pointercursor' onclick='mostrar_añadirtipo(\"{$nonaddedtypes[$i]}\")'><i class='icono-plus'></i></td>
                             </tr>";
                           ++$i;
                         }
@@ -166,8 +184,8 @@ while ($row = mysqli_fetch_row($consulta)) {
                </h4>
              </div>
              <div id="collapse2" class="panel-collapse collapse">
-               <div class="panel-body personaltitles myModalmessage">
-                 Tienes <?php echo $edad['age'];?> años.
+               <div class="panel-body text-age-perfil">
+                 Tienes <?php echo $usuario['age'];?> años.
                </div>
              </div>
            </div>
@@ -182,10 +200,12 @@ while ($row = mysqli_fetch_row($consulta)) {
 
     <script>
       function mostrar_eliminartipo(tipoaeliminar){
+        $('#erasetype').val(tipoaeliminar);
         $('#tipoaeliminar').html(tipoaeliminar);
         $('#erasetypemodal').modal();
       }
       function mostrar_añadirtipo(tipoaañadir){
+        $('#addtype').val(tipoaañadir);
         $('#tipoaañadir').html(tipoaañadir);
         $('#addtypemodal').modal();
       }
@@ -205,6 +225,7 @@ while ($row = mysqli_fetch_row($consulta)) {
             <div class="panel-body form-group form">
                 ¿Estás seguro de querer eliminar <span id="tipoaeliminar" class="text-danger musictype"></span> de tu lista de música?
                 <input type="hidden" class="form-control" name="eliminar" value="eliminartipo">
+                <input type="hidden" class="form-control" name="tipoparaeliminar" value="" id="erasetype">
             </div>
           </form>
         </div>
@@ -226,14 +247,16 @@ while ($row = mysqli_fetch_row($consulta)) {
         <h4 class="modal-title message-title">Añadir TIPO DE MÚSICA </h4>
       </div>
       <div class="modal-body">
-        <form action="" method="POST" id="formerasetype">
+        <form action="" method="POST" id="formaddtype">
           <div class="panel-body form-group form">
               ¿Estás seguro de querer añadir <span id="tipoaañadir" class="text-success musictype"></span> a tu lista de música?
+              <input type="hidden" class="form-control" name="añadir" value="añadirtipo">
+              <input type="hidden" class="form-control" name="tipoparaañadir" value="" id="addtype">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-default error-button-close" form="formerasetype">Añadir</button>
+        <button type="submit" class="btn btn-default error-button-close" form="formaddtype">Añadir</button>
       </div>
     </div>
   </div>
@@ -263,7 +286,10 @@ while ($row = mysqli_fetch_row($consulta)) {
       </div>
     </div></a>
     <!--  END MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
-
-
+    <?php if($usuario['rol'] == 'admin'):?>
+    <div>
+      <button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton" onclick='mostrar_enviarmensaje()'>Administrar grupos</button>
+    </div>
+  <?php endif; ?>
   </body>
 </html>

@@ -198,7 +198,6 @@ function mostrar_errornotcomplete() {
           <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" title="Perfil"><i class="icono-user"></i></a></li>
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>
       </ul>
     </div>
@@ -242,7 +241,7 @@ function mostrar_errornotcomplete() {
                     <th class="personaltitles">Autor</th>
                     <th class="personaltitles">Título</th>
                     <th class="personaltitles" id="th-leido">Leído</th>
-                    <th class="personaltitles" id="th-responder">Responder</th>
+                    <th class="personaltitles th_responder">Responder</th>
                   </tr>
               </thead>
               <tbody>
@@ -323,7 +322,7 @@ function mostrar_errornotcomplete() {
         }
         function mostrar_respondermensaje(replydestination){
           $('#replydestination').val(replydestination);
-          $('#sendreplyModal').modal();
+          $('#sendmessageModal').modal();
         }
       </script>
 
@@ -339,7 +338,7 @@ function mostrar_errornotcomplete() {
           <div class="modal-body">
             <form action="" method="POST" id="formsendmessage">
           		<div class="panel-body form-group form">
-          				<input type="text" class="form-control" placeholder="Destinatario" name="destinatario" value="<?php if(!empty($_POST['destinatario']) && !$messagesent) {
+          				<input type="text" class="form-control" placeholder="Destinatario" name="destinatario" id="replydestination" value="<?php if(!empty($_POST['destinatario']) && !$messagesent) {
                     echo $_POST['destinatario'];
                   } ?>">
           				<br>
@@ -361,39 +360,6 @@ function mostrar_errornotcomplete() {
       </div>
     </div>
     <!--END  Modal content-->
-
-    <!-- Modal  RESPONDER MENSAJE-->
-    <div id="sendreplyModal" class="modal fade myModalmessage" role="dialog">
-    <div class="modal-dialog">
-
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title message-title">RESPONDER MENSAJE </h4>
-        </div>
-        <div class="modal-body">
-          <form action="" method="POST" id="formsendmessage">
-            <div class="panel-body form-group form">
-                <input type="text" class="form-control" placeholder="Destinatario" name="destinatario" id="replydestination">
-                <br>
-                <input type="text" class="form-control" placeholder="Título" name="titulo" value="<?php if(!empty($_POST['titulo']) && !$messagesent) {
-                  echo $_POST['titulo'];
-                } ?>">
-                <br>
-                <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeform">
-                <textarea class="form-control" rows="5" name="mensaje" placeholder="Mensaje"><?php if(!empty($_POST['mensaje']) && !$messagesent) {
-                  echo $_POST['mensaje'];
-                } ?></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-default error-button-close" form="formsendmessage">ENVIAR</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--END  Modal content-->
 
 
     </div>

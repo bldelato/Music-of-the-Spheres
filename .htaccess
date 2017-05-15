@@ -10,3 +10,5 @@ RewriteRule main  main.php
 RewriteRule register  register.php
 RewriteRule mpersonal  mpersonal.php
 RewriteRule mglobal  mglobal.php
+
+DirectoryIndex main.php
