@@ -60,7 +60,7 @@ function mostrar_errornotsent() {
 				<p class="text-danger">El mensaje no se ha enviado. Por favor, inténtelo de nuevo.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 
@@ -86,7 +86,7 @@ function mostrar_errormessagesent() {
 				<p class="text-success">El mensaje se ha enviado correctamente.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 
@@ -111,7 +111,7 @@ function mostrar_errornotcomplete() {
 				<p class="text-danger">No ha rellenado todos los campos, por favor complete el mensaje.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 
@@ -161,92 +161,6 @@ function mostrar_errornotcomplete() {
 
     <!-- MUNDO IZQUIERDO -> MENSAJES PERSONALES -->
     <div  class="main-panel">
-      <table class="table table-hover table-condensed table-responsive personaltable">
-          <thead>
-              <tr>
-                <th class="personaltitles">Autor</th>
-                <th class="personaltitles">Título</th>
-              </tr>
-          </thead>
-          <tbody>
-            <?php
-              $i=0;
-              while(isset($mensajesrecibidos[$i])){
-                echo "<tr onclick='mostrar_mensaje($i, \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>
-                    <td>{$mensajesrecibidos[$i]['idorigin']}</td>
-                    <td>{$mensajesrecibidos[$i]['title']}</td>
-                  </tr>";
-
-                ++$i;
-              }?>
-          </tbody>
-        </table>
-        <button type="button" class="btn btn-primary btn-lg button-send-message" onclick='mostrar_enviarmensaje()'>Enviar mensaje</button>
-
-        <!-- Modal content-->
-        <div id="messageModal" class="modal fade myModal" role="dialog">
-      	<div class="modal-dialog">
-
-      		<div class="modal-content">
-      			<div class="modal-header">
-      				<button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title message-title">De: <span id="messageauthor"></h4>
-              <h4 class="modal-title message-title">Título: <span id="messagetitle"></span></h4>
-      			</div>
-      			<div class="modal-body">
-      				<p id="messagebody"></p>
-      			</div>
-      			<div class="modal-footer">
-      				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
-      			</div>
-      		</div>
-
-      	</div>
-
-      </div>
-      <!-- Modal content-->
-      <script>
-        function mostrar_mensaje(i, messagetitle, messageauthor, messagebody) {
-          $('#messagetitle').html(messagetitle);
-          $('#messageauthor').html(messageauthor);
-          $('#messagebody').html(messagebody);
-          $('#messageModal').modal();
-        }
-        function mostrar_enviarmensaje(){
-          $('#sendmessageglobalModal').modal();
-        }
-      </script>
-
-      <!-- Modal  ENVIAR MENSAJE-->
-      <div id="sendmessageglobalModal" class="modal fade myModalmessage" role="dialog">
-        <div class="modal-dialog">
-
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title message-title">REDACTAR MENSAJE </h4>
-            </div>
-            <div class="modal-body">
-              <form action="" method="POST" id="formsendmessage">
-            		<div class="panel-body form-group form">
-            				<input type="text" class="form-control" placeholder="Título" name="titulo" value="<?php if(!empty($_POST['titulo']) && !$messagesent) {
-                      echo $_POST['titulo'];
-                    } ?>">
-            				<br>
-                    <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeform">
-                    <textarea class="form-control" rows="5" name="mensaje" placeholder="Mensaje"><?php if(!empty($_POST['mensaje']) && !$messagesent) {
-                      echo $_POST['mensaje'];
-                    } ?></textarea>
-            		</div>
-            	</form>
-            </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-default error-button-close" form="formsendmessage">ENVIAR</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--END  Modal content-->
 
     </div>
     <!--  MENSAJES GRUPALES -->

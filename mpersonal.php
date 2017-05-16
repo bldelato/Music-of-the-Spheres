@@ -78,7 +78,7 @@ function mostrar_errornotexistingdestination() {
 				<p class="text-danger">El destinatario no existe. Por favor, inténtelo de nuevo.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 
@@ -104,7 +104,7 @@ function mostrar_errornotsent() {
 				<p class="text-danger">El mensaje no se ha enviado. Por favor, inténtelo de nuevo.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 
@@ -130,7 +130,7 @@ function mostrar_errormessagesent() {
 				<p class="text-success">El mensaje se ha enviado correctamente.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 
@@ -155,7 +155,7 @@ function mostrar_errornotcomplete() {
 				<p class="text-danger">No ha rellenado todos los campos, por favor complete el mensaje.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 
@@ -183,7 +183,7 @@ function mostrar_errornotcomplete() {
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Lobster+Two|Rajdhani|Poiret+One" rel="stylesheet">
     <link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">
 
-    <link rel='shortcut icon' type='image/x-icon' href='img/note-icon.png' />
+    <link rel='shortcut icon' type='image/x-icon' href='img/note-icon.png'/>
 		<title>MUSIC OF THE SPHERES</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -248,9 +248,9 @@ function mostrar_errornotcomplete() {
                 <?php
                   $i=0;
                   while(isset($mensajesrecibidos[$i])){
-                    echo "<tr>
-                        <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['idorigin']}</td>
-                        <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['title']}</td>
+                    echo "<tr id='messagerow{$mensajesrecibidos[$i]['id']}'>
+                        <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['idorigin']}</td>
+                        <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['title']}</td>
                         <td><span class='glyphicon glyphicon-eye-".($mensajesrecibidos[$i]['leido'] ? 'open':'close')."'></span></td>
                         <td onclick='mostrar_respondermensaje(\"{$mensajesrecibidos[$i]['idorigin']}\")'><span class='glyphicon glyphicon-share-alt pointercursor'></span></td>
                       </tr>";
@@ -277,7 +277,7 @@ function mostrar_errornotcomplete() {
             <p id="messagebody"></p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
           </div>
         </div>
       </div>
@@ -298,18 +298,30 @@ function mostrar_errornotcomplete() {
       				<p id="messagebodyr"></p>
       			</div>
       			<div class="modal-footer">
-      				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+      				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
       			</div>
       		</div>
       	</div>
       </div>
       <!--END  Modal content-->
       <script>
-        function mostrar_mensajerecibido(i, messagetitle, messageauthor, messagebody) {
+        function mostrar_mensajerecibido(i, id, messagetitle, messageauthor, messagebody) {
           $('#messagetitler').html(messagetitle);
           $('#messageauthorr').html(messageauthor);
           $('#messagebodyr').html(messagebody);
           $('#messageModalrecibido').modal();
+
+          $.ajax({
+            url: "marcarleido.php",
+            type: "POST",
+            data: {
+              idmessage: id,
+            },
+            success: function(data){
+              console.log(data);
+              $('#messagerow'+id).find('span.glyphicon-eye-close').removeClass('glyphicon-eye-close').addClass('glyphicon-eye-open');
+            }
+          });
         }
         function mostrar_mensajeenviado(i, messagetitle, messagedestination, messagebody) {
           $('#messagetitle').html(messagetitle);

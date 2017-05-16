@@ -47,7 +47,7 @@ function mostrar_formulario(){
 				<br>
 				<input type="password" class="form-control" placeholder="Contraseña" name="password">
 				<br>
-				<input type="submit" value="LOG IN" class="button-form">
+				<input type="submit" value="ENTRAR" class="button-form" id="loginbutton">
 		</div>
 	</form>';
 }
@@ -65,7 +65,7 @@ function mostrar_error() {
 				<p class="text-danger">Contraseña incorrecta. Por favor, inténtelo de nuevo.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 

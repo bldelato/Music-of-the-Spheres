@@ -286,9 +286,10 @@ while ($row = mysqli_fetch_assoc($consulta)) {
       </div>
     </div></a>
     <!--  END MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
+
     <?php if($usuario['rol'] == 'admin'):?>
     <div>
-      <button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton" onclick='mostrar_enviarmensaje()'>Administrar grupos</button>
+      <a href="admin.php"><button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton">Administrar grupos</button></a>
     </div>
   <?php endif; ?>
   </body>

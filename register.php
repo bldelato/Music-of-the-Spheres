@@ -60,7 +60,7 @@ function mostrar_formulario(){
 				<br>
         <input type="number" min="1" max="100" class="form-control" placeholder="Edad" name="age">
 				<br>
-				<input type="submit" value="LOG IN" class="button-form">
+				<input type="submit" value="REGISTRARSE" class="button-form" id="registerbutton">
 		</div>
 	</form>';
 }
@@ -78,7 +78,7 @@ function mostrar_error_user() {
 				<p class="text-danger">Ese nombre de usuario ya está en uso. Por favor, inténtelo de nuevo.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 
@@ -104,7 +104,7 @@ function mostrar_error_passwords() {
 				<p class="text-danger">Las contraseñas no coinciden. Por favor, inténtelo de nuevo.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 
@@ -130,7 +130,7 @@ function mostrar_error_register() {
 				<p class="text-danger">No se ha realizado el registro correctamente. Por favor, inténtelo de nuevo.</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 

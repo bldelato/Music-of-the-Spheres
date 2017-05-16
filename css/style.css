@@ -155,6 +155,8 @@ li:hover i, tr:hover i {
 
 #form-style-register {
     padding-top: 20px;
+    margin-top: -20px;
+    margin-bottom: -10px;
 }
 
 #enlace-login {
@@ -173,6 +175,13 @@ li:hover i, tr:hover i {
     font-weight: bold;
 }
 
+#registerbutton {
+  border-radius: 10px;
+  background-color: #b08e6b;
+  border-color: #77471f;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+}
 
 /************************* LOG IN PAGE ***************************/
 
@@ -275,6 +284,13 @@ li:hover i, tr:hover i {
     animation-iteration-count: infinite;
 }
 
+#loginbutton {
+  border-radius: 10px;
+  background-color: #e59e52;
+  border-color: #cb632e;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+}
 
 /************************* PERSONAL MESSAGES PAGE ***************************/
 
