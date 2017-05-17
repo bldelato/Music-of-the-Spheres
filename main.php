@@ -29,6 +29,13 @@ if(!empty($_POST['añadir']) && $_POST['añadir']=='añadirtipo' && !empty($_POS
 
   $sql = "INSERT INTO `musictypes`(`type`, `id`) VALUES ('$type', '$user')";
   $consulta = mysqli_query($db, $sql);
+
+  $sql="SELECT groups.title FROM groups, users, musictypes WHERE users.id = '$user' AND users.age>=minage AND users.age<=maxage AND musictypes.id=users.id AND musictypes.type='$type' AND groups.type='$type'";
+  $consulta = mysqli_query($db, $sql);
+  while($row = mysqli_fetch_assoc($consulta)){
+    $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('{$row['title']}', '$user')";
+    $consulta2 = mysqli_query($db, $sql);
+  }
 }
 
 $sql = "SELECT * FROM `messages` WHERE iddestination='$user'";
@@ -280,7 +287,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
     <!-- END MUNDO IZQUIERDO -> MENSAJES GLOBALES -->
 
     <!-- MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
-    <a href="#"><div class="panel panelplanet main-panel" id ="mainpanelright">
+    <a href="mgrupal"><div class="panel panelplanet main-panel" id ="mainpanelright">
       <div class="login-form">
         <h3 class="panel-content"> Mensajes Grupales <span class="label label-default" id="label-moon">5</span></h3>
       </div>
@@ -289,7 +296,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
 
     <?php if($usuario['rol'] == 'admin'):?>
     <div>
-      <a href="admin.php"><button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton">Administrar grupos</button></a>
+      <a href="admin"><button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton">Administrar grupos</button></a>
     </div>
   <?php endif; ?>
   </body>

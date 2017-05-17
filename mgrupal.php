@@ -16,7 +16,7 @@ if (!empty($_SESSION['user'])) {
       header('Location: login.php');
 }
 
-$sql = "SELECT * FROM `groups`";
+$sql = "SELECT * FROM groups, groupsrelation WHERE groupsrelation.iduser='$user' AND groups.title=groupsrelation.grouptitle";
 $consulta = mysqli_query($db, $sql);
 $grupos=[];
 $grouptitles =[];
@@ -54,6 +54,7 @@ if(!empty($_POST['complete']) && $_POST['complete']=='completeform'){
           $consulta = mysqli_query($db, $sql);
           $usuariosvalidos=[];
           while ($row = mysqli_fetch_assoc($consulta)) {
+
             $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('$titulo','{$row['id']}')";
             $consulta2 = mysqli_query($db, $sql);
           }
@@ -228,7 +229,7 @@ function mostrar_repeatedtitle() {
       <ul class="nav navbar-nav">
           <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Home</a></li>
           <li><a href="mpersonal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Personales</a></li>
-          <li><a href="mgrupal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
+          <li><a href="mglobal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Globales</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>
@@ -244,18 +245,16 @@ function mostrar_repeatedtitle() {
               <th class="personaltitles">Grupo</th>
               <th class="personaltitles">Estilo</th>
               <th class="personaltitles">Edad</th>
-              <th class="personaltitles">Eliminar</th>
             </tr>
         </thead>
         <tbody>
           <?php
             $i=0;
             while(isset($grupos[$i])){
-              echo "<tr>
+              echo "<tr class='defaultcursor'>
                   <td>{$grupos[$i]['title']}</td>
                   <td>{$grupos[$i]['type']}</td>
                   <td>{$grupos[$i]['minage']} - {$grupos[$i]['maxage']}</td>
-                  <td  class='pointercursor' onclick='mostrar_eliminargrupo(\"{$grupos[$i]['title']}\")'><i class='icono-trash pointercursor'></i></td>
                 </tr>";
               ++$i;
             }?>
@@ -268,86 +267,7 @@ function mostrar_repeatedtitle() {
     </div>
 
         <script>
-          function mostrar_eliminargrupo(grupoaeliminar){
-            $('#erasegroup').val(grupoaeliminar);
-            $('#grupoaeliminar').html(grupoaeliminar);
-            $('#erasegroupmodal').modal();
-          }
-          function mostrar_añadirgrupo(){
-            $('#addgroupmodal').modal();
-          }
         </script>
-
-        <!-- Modal  ELIMINAR GRUPO-->
-        <div id="erasegroupmodal" class="modal fade myModalmessage" role="dialog">
-        <div class="modal-dialog">
-
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title message-title">ELIMINAR GRUPO </h4>
-            </div>
-            <div class="modal-body">
-              <form action="" method="POST" id="formerasegroup">
-                <div class="panel-body form-group form">
-                    ¿Estás seguro de querer eliminar <span id="grupoaeliminar" class="text-danger musictype"></span> de la lista de grupos?
-                    <input type="hidden" class="form-control" name="eliminar" value="eliminargrupo">
-                    <input type="hidden" class="form-control" name="grupoparaeliminar" value="" id="erasegroup">
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-default error-button-close" form="formerasegroup">Eliminar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--END  Modal content-->
-
-      <!-- Modal  AÑADIR GROUP-->
-      <div id="addgroupmodal" class="modal fade myModalmessage" role="dialog">
-        <div class="modal-dialog">
-
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title message-title">AÑADIR GRUPO </h4>
-            </div>
-            <div class="modal-body">
-              <form action="" method="POST" id="formaddgroup">
-            		<div class="panel-body form-group form">
-            				<input type="text" class="form-control" placeholder="Título" name="title" value="<?php if(!empty($_POST['title']) && (!$groupcreated || $repeatedtitle)) {
-                      echo $_POST['title'];
-                    } ?>">
-            				<br>
-                    <select type="text"  class="form-control select-admin" name="type">
-                      <?php
-                        foreach($musictypes as $i){
-                          echo '<option value="'.$i.'">'.$i.'</option>';
-                        }
-                      ?>
-                    </select>
-            				<br>
-                    <input type="number" min="1" max="100" class="form-control" placeholder="Edad mínima" name="minage" value="<?php if(!empty($_POST['minage']) && !$groupcreated) {
-                      echo $_POST['minage'];
-                    } ?>">
-            				<br>
-                    <input type="number" min="1" max="100" class="form-control" placeholder="Edad máxima" name="maxage" value="<?php if(!empty($_POST['maxage']) && !$groupcreated) {
-                      echo $_POST['maxage'];
-                    } ?>">
-            				<br>
-                    <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeform">
-
-            		</div>
-            	</form>
-            </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-default error-button-close" form="formaddgroup">CREAR</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--END  Modal content-->
 
 
     <!--  MENSAJES GRUPALES -->

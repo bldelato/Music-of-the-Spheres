@@ -131,7 +131,6 @@ li:hover i, tr:hover i {
 
 .panel-body{
   padding-top: 0px;
-
 }
 
 .groupsbutton {
@@ -199,7 +198,6 @@ li:hover i, tr:hover i {
     font-size: 40px;
     margin-right: 10px;
 }
-
 
 /* ---- particles.js container ---- */
 
@@ -388,4 +386,10 @@ li:hover i, tr:hover i {
 .musictype_row {
   font-size: 20px;
   text-align: center;
+}
+
+/**++++++++++++++++++++++++++++ ADMIN PAGE***************************/
+
+.select-admin{
+  height: 40px;
 }

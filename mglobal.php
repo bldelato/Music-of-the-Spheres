@@ -151,7 +151,7 @@ function mostrar_errornotcomplete() {
       <ul class="nav navbar-nav">
           <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Home</a></li>
           <li><a href="mpersonal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Personales</a></li>
-          <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
+          <li><a href="mgrupal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>
@@ -197,7 +197,7 @@ function mostrar_errornotcomplete() {
       				<p id="messagebody"></p>
       			</div>
       			<div class="modal-footer">
-      				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+      				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
       			</div>
       		</div>
 

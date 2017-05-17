@@ -41,6 +41,7 @@ if (!empty($_SESSION['user'])) {
           }
           else {
             $user = $name;
+
             $_SESSION['user'] = $user;
             header('Location: main.php');
           }

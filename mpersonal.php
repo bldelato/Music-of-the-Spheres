@@ -195,7 +195,7 @@ function mostrar_errornotcomplete() {
       <ul class="nav navbar-nav">
           <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Home</a></li>
           <li><a href="mglobal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Globales</a></li>
-          <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
+          <li><a href="mgrupal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>
