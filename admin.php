@@ -228,6 +228,7 @@ function mostrar_repeatedtitle() {
       <ul class="nav navbar-nav">
           <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Home</a></li>
           <li><a href="mpersonal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Personales</a></li>
+          <li><a href="mglobal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Globales</a></li>
           <li><a href="mgrupal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

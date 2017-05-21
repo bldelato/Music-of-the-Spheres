@@ -113,7 +113,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
     <!-- PERFIL -->
     <div id="collapseperfil" class="panel-collapse collapse">
 
-      <div class="panel-heading panel-title">PERFIL</div>
+      <div class="panel-heading panel-title">PERFIL - <?php echo $user;?></div>
 
       <!-- PANEL BODY -->
       <div class="panel-body">
@@ -289,7 +289,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
     <!-- MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
     <a href="mgrupal"><div class="panel panelplanet main-panel" id ="mainpanelright">
       <div class="login-form">
-        <h3 class="panel-content"> Mensajes Grupales <span class="label label-default" id="label-moon">5</span></h3>
+        <h3 class="panel-content"> Mensajes Grupales</h3>
       </div>
     </div></a>
     <!--  END MUNDO IZQUIERDO -> MENSAJES GRUPALES -->
