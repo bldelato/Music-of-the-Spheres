@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 session_start();
 $db = mysqli_connect('localhost', 'musicofthesphere', 'adminMS', 'musicofthesphere');
 if (!$db) {
-  die('Error al conectarse con la base de datos');
+    die('Error al conectarse con la base de datos');
 }
 
 /* ADMINISTRAR EL USUARIO */
@@ -14,9 +14,9 @@ if (!$db) {
 $user = false;
 
 if (!empty($_SESSION['user'])) {
-  $user = $_SESSION['user'];
+    $user = $_SESSION['user'];
 } else {
-   header('Location: login.php');
+    header('Location: login.php');
 }
 
 /* VARIABLES DE CONTROL DE ERRORES/FINALIZACIÓN */
@@ -36,75 +36,73 @@ $grupos=[];
 $grouptitles =[];
 
 while ($row = mysqli_fetch_assoc($consulta)) {
-  $grupos[] = $row;
-  $grouptitles[]=$row['title'];
+    $grupos[] = $row;
+    $grouptitles[]=$row['title'];
 }
 
 /* CREAR UN GRUPO */
 
-if(!empty($_POST['complete']) && $_POST['complete']=='completeformgroup'){
-  if (!empty($_POST['title']) && !empty($_POST['type']) && !empty($_POST['minage']) && !empty($_POST['maxage'])) {
-    $titulo = $_POST['title'];
-    $tipo = $_POST['type'];
-    $minage = $_POST['minage'];
-    $maxage = $_POST['maxage'];
+if (!empty($_POST['complete']) && $_POST['complete']=='completeformgroup') {
+    if (!empty($_POST['title']) && !empty($_POST['type']) && !empty($_POST['minage']) && !empty($_POST['maxage'])) {
+        $titulo = $_POST['title'];
+        $tipo = $_POST['type'];
+        $minage = $_POST['minage'];
+        $maxage = $_POST['maxage'];
 
     // Si ya existe un grupo con ese título
-    if(in_array($titulo, $grouptitles)){
-      $repeatedtitle=true;
+    if (in_array($titulo, $grouptitles)) {
+        $repeatedtitle=true;
     }
     // Se crea el grupo
-    else{
-      $sql = "INSERT INTO groups(title, type, minage, maxage) VALUES ('$titulo','$tipo','$minage','$maxage')";
-      $consulta = mysqli_query($db, $sql);
-      if(!$consulta){
-        $notcreated= true;
-      }
-      else {
-        $groupcreated = true;
+    else {
+        $sql = "INSERT INTO groups(title, type, minage, maxage) VALUES ('$titulo','$tipo','$minage','$maxage')";
+        $consulta = mysqli_query($db, $sql);
+        if (!$consulta) {
+            $notcreated= true;
+        } else {
+            $groupcreated = true;
 
         // Se comprueba los usuarios que podrían pertenecer a ese grupo
         $sql = "SELECT users.id FROM users, musictypes WHERE age >='$minage' AND age<='$maxage' AND musictypes.id=users.id AND musictypes.type='$tipo'";
-        $consulta = mysqli_query($db, $sql);
-        while ($row = mysqli_fetch_assoc($consulta)) {
-          $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('$titulo','{$row['id']}')";
-          $consulta2 = mysqli_query($db, $sql);
-        }
+            $consulta = mysqli_query($db, $sql);
+            while ($row = mysqli_fetch_assoc($consulta)) {
+                $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('$titulo','{$row['id']}')";
+                $consulta2 = mysqli_query($db, $sql);
+            }
 
         // Se refresca la lista de grupos
         $sql = "SELECT * FROM `groups`";
-        $consulta = mysqli_query($db, $sql);
-        $grupos=[];
-        $grouptitles =[];
-        while ($row = mysqli_fetch_assoc($consulta)) {
-          $grupos[] = $row;
-          $grouptitles[]=$row['title'];
+            $consulta = mysqli_query($db, $sql);
+            $grupos=[];
+            $grouptitles =[];
+            while ($row = mysqli_fetch_assoc($consulta)) {
+                $grupos[] = $row;
+                $grouptitles[]=$row['title'];
+            }
         }
-      }
     }
-  }
-  else{
-    $notcomplete = true;
-  }
+    } else {
+        $notcomplete = true;
+    }
 }
 
 /* ELIMINAR UN GRUPO */
 
-if(!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminargrupo' && !empty($_POST['grupoparaeliminar'])){
-  $title = $_POST['grupoparaeliminar'];
+if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminargrupo' && !empty($_POST['grupoparaeliminar'])) {
+    $title = $_POST['grupoparaeliminar'];
 
-  $sql = "DELETE FROM `groups` WHERE title='$title'";
-  $consulta = mysqli_query($db, $sql);
+    $sql = "DELETE FROM `groups` WHERE title='$title'";
+    $consulta = mysqli_query($db, $sql);
 
   // Se refresca la lista de grupos
   $sql = "SELECT * FROM `groups`";
-  $consulta = mysqli_query($db, $sql);
-  $grupos=[];
-  $grouptitles =[];
-  while ($row = mysqli_fetch_assoc($consulta)) {
-    $grupos[] = $row;
-    $grouptitles[]=$row['title'];
-  }
+    $consulta = mysqli_query($db, $sql);
+    $grupos=[];
+    $grouptitles =[];
+    while ($row = mysqli_fetch_assoc($consulta)) {
+        $grupos[] = $row;
+        $grouptitles[]=$row['title'];
+    }
 }
 
 /* ADMINISTRAR ESTILOS DE MÚSICA */
@@ -114,67 +112,66 @@ $consulta = mysqli_query($db, $sql);
 $musictypes=[];
 
 while ($row = mysqli_fetch_assoc($consulta)) {
-  $musictypes[] = $row['type'];
+    $musictypes[] = $row['type'];
 }
 
 /* CREAR UN ESTILO */
 
-if(!empty($_POST['complete']) && $_POST['complete']=='completeformtype'){
-  if (!empty($_POST['typeofmusic'])) {
-    $tipoaañadir = $_POST['typeofmusic'];
+if (!empty($_POST['complete']) && $_POST['complete']=='completeformtype') {
+    if (!empty($_POST['typeofmusic'])) {
+        $tipoaañadir = $_POST['typeofmusic'];
 
     // Si ya existe un estilo con ese nombre
-    if(in_array($tipoaañadir, $musictypes)){
-      $repeatedtype=true;
+    if (in_array($tipoaañadir, $musictypes)) {
+        $repeatedtype=true;
     }
     // Se crea el estilo
-    else{
-      $sql = "INSERT INTO typesmusic VALUES ('$tipoaañadir')";
-      $consulta = mysqli_query($db, $sql);
-      if(!$consulta){
-        $notcreated= true;
-      }
-      else {
-        $typecreated = true;
+    else {
+        $sql = "INSERT INTO typesmusic VALUES ('$tipoaañadir')";
+        $consulta = mysqli_query($db, $sql);
+        if (!$consulta) {
+            $notcreated= true;
+        } else {
+            $typecreated = true;
 
         // Se refresca la lista de estilos
         $sql = "SELECT DISTINCT type FROM `typesmusic`";
-        $consulta = mysqli_query($db, $sql);
-        $musictypes=[];
+            $consulta = mysqli_query($db, $sql);
+            $musictypes=[];
 
-        while ($row = mysqli_fetch_assoc($consulta)) {
-          $musictypes[] = $row['type'];
+            while ($row = mysqli_fetch_assoc($consulta)) {
+                $musictypes[] = $row['type'];
+            }
         }
-      }
     }
-  }
-  else{
-    $notcomplete = true;
-  }
+    } else {
+        $notcomplete = true;
+    }
 }
 
 /* ELIMINAR UN ESTILO */
 
-if(!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminarestilo' && !empty($_POST['estiloparaeliminar'])){
-  $typemusic = $_POST['estiloparaeliminar'];
+if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminarestilo' && !empty($_POST['estiloparaeliminar'])) {
+    $typemusic = $_POST['estiloparaeliminar'];
 
-  $sql = "DELETE FROM `typesmusic` WHERE type='$typemusic'";
-  $consulta = mysqli_query($db, $sql);
+    $sql = "DELETE FROM `typesmusic` WHERE type='$typemusic'";
+    $consulta = mysqli_query($db, $sql);
 
   // Se refresca la lista de estilos
   $sql = "SELECT DISTINCT type FROM `typesmusic`";
-  $consulta = mysqli_query($db, $sql);
-  $musictypes=[];
+    $consulta = mysqli_query($db, $sql);
+    $musictypes=[];
 
-  while ($row = mysqli_fetch_assoc($consulta)) {
-    $musictypes[] = $row['type'];
-  }
+    while ($row = mysqli_fetch_assoc($consulta)) {
+        $musictypes[] = $row['type'];
+    }
 }
 
 /* FUNCIONES */
 
-function mostrar_errornotcreated() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalnotcreated">
+function mostrar_errornotcreated()
+{
+    echo '<div class="modal fade myModal" role="dialog" id="modalnotcreated">
   	<div class="modal-dialog">
   		<div class="modal-content">
   			<div class="modal-header">
@@ -194,10 +191,11 @@ function mostrar_errornotcreated() {
   		});
   	</script>
   </div>';
-  }
+}
 
-function mostrar_groupcreated() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalgroupcreated">
+function mostrar_groupcreated()
+{
+    echo '<div class="modal fade myModal" role="dialog" id="modalgroupcreated">
   	<div class="modal-dialog">
   		<div class="modal-content">
   			<div class="modal-header">
@@ -217,10 +215,11 @@ function mostrar_groupcreated() {
   		});
   	</script>
   </div>';
-  }
+}
 
-  function mostrar_typecreated() {
-  	echo '<div class="modal fade myModal" role="dialog" id="modaltypecreated">
+  function mostrar_typecreated()
+  {
+      echo '<div class="modal fade myModal" role="dialog" id="modaltypecreated">
     	<div class="modal-dialog">
     		<div class="modal-content">
     			<div class="modal-header">
@@ -240,10 +239,11 @@ function mostrar_groupcreated() {
     		});
     	</script>
     </div>';
-    }
+  }
 
-function mostrar_errornotcomplete() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalnotcomplete">
+function mostrar_errornotcomplete()
+{
+    echo '<div class="modal fade myModal" role="dialog" id="modalnotcomplete">
   	<div class="modal-dialog">
   		<div class="modal-content">
   			<div class="modal-header">
@@ -263,10 +263,11 @@ function mostrar_errornotcomplete() {
   		});
   	</script>
   </div>';
-  }
+}
 
-function mostrar_repeatedtitle() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalrepeatedtitle">
+function mostrar_repeatedtitle()
+{
+    echo '<div class="modal fade myModal" role="dialog" id="modalrepeatedtitle">
   	<div class="modal-dialog">
   		<div class="modal-content">
   			<div class="modal-header">
@@ -288,8 +289,9 @@ function mostrar_repeatedtitle() {
   </div>';
 }
 
-function mostrar_repeatedtype() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalrepeatedtype">
+function mostrar_repeatedtype()
+{
+    echo '<div class="modal fade myModal" role="dialog" id="modalrepeatedtype">
   	<div class="modal-dialog">
   		<div class="modal-content">
   			<div class="modal-header">
@@ -377,14 +379,14 @@ function mostrar_repeatedtype() {
             <tbody>
               <?php
                 $i=0;
-                while(isset($grupos[$i])){
-                  echo "<tr>
+                while (isset($grupos[$i])) {
+                    echo "<tr>
                     <td>{$grupos[$i]['title']}</td>
                     <td>{$grupos[$i]['type']}</td>
                     <td>{$grupos[$i]['minage']} - {$grupos[$i]['maxage']}</td>
                     <td  class='pointercursor' onclick='mostrar_eliminargrupo(\"{$grupos[$i]['title']}\")'><i class='icono-trash pointercursor'></i></td>
                   </tr>";
-                  ++$i;
+                    ++$i;
                 }
               ?>
             </tbody>
@@ -409,12 +411,12 @@ function mostrar_repeatedtype() {
             <tbody>
               <?php
                 $i=0;
-                while(isset($musictypes[$i])){
-                  echo "<tr>
+                while (isset($musictypes[$i])) {
+                    echo "<tr>
                     <td class='defaultcursor'>{$musictypes[$i]}</td>
                     <td  class='pointercursor' onclick='mostrar_eliminarestilo(\"{$musictypes[$i]}\")'><i class='icono-trash pointercursor'></i></td>
                   </tr>";
-                  ++$i;
+                    ++$i;
                 }
               ?>
             </tbody>
@@ -512,24 +514,25 @@ function mostrar_repeatedtype() {
           <div class="modal-body">
             <form action="" method="POST" id="formaddgroup">
           		<div class="panel-body form-group form">
-        				<input type="text" class="form-control" placeholder="Título" name="title" value="<?php if(!empty($_POST['title']) && (!$groupcreated || $repeatedtitle)) {
-                  echo $_POST['title']; } ?>">
+        				<input type="text" class="form-control" placeholder="Título" name="title" value="<?php if (!empty($_POST['title']) && (!$groupcreated || $repeatedtitle)) {
+                  echo $_POST['title'];
+              } ?>">
         				<br>
                 <select type="text"  class="form-control select-admin" name="type">
                   <?php
-                    foreach($musictypes as $i){
-                      echo '<option value="'.$i.'">'.$i.'</option>';
+                    foreach ($musictypes as $i) {
+                        echo '<option value="'.$i.'">'.$i.'</option>';
                     }
                   ?>
                 </select>
         				<br>
-                <input type="number" min="1" max="100" class="form-control" placeholder="Edad mínima" name="minage" value="<?php if(!empty($_POST['minage']) && !$groupcreated) {
-                  echo $_POST['minage'];
-                } ?>">
+                <input type="number" min="1" max="100" class="form-control" placeholder="Edad mínima" name="minage" value="<?php if (!empty($_POST['minage']) && !$groupcreated) {
+                      echo $_POST['minage'];
+                  } ?>">
         				<br>
-                <input type="number" min="1" max="100" class="form-control" placeholder="Edad máxima" name="maxage" value="<?php if(!empty($_POST['maxage']) && !$groupcreated) {
-                  echo $_POST['maxage'];
-                } ?>">
+                <input type="number" min="1" max="100" class="form-control" placeholder="Edad máxima" name="maxage" value="<?php if (!empty($_POST['maxage']) && !$groupcreated) {
+                      echo $_POST['maxage'];
+                  } ?>">
         				<br>
                 <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeformgroup">
           		</div>
@@ -554,8 +557,9 @@ function mostrar_repeatedtype() {
           <div class="modal-body">
             <form action="" method="POST" id="formaddtype">
           		<div class="panel-body form-group form">
-        				<input type="text" class="form-control" placeholder="Título" name="typeofmusic" value="<?php if(!empty($_POST['typeofmusic']) && (!$typecreated || $repeatedtype)) {
-                  echo $_POST['typeofmusic']; } ?>">
+        				<input type="text" class="form-control" placeholder="Título" name="typeofmusic" value="<?php if (!empty($_POST['typeofmusic']) && (!$typecreated || $repeatedtype)) {
+                      echo $_POST['typeofmusic'];
+                  } ?>">
                 <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeformtype">
           		</div>
           	</form>
@@ -570,23 +574,18 @@ function mostrar_repeatedtype() {
 
     <!-- MENSAJES DE CONTROL DE ERRORES/FINALIZACIÓN -->
     <?php
-      if($notcreated){
-        mostrar_errornotcreated();
-      }
-      elseif($groupcreated){
-        mostrar_groupcreated();
-      }
-      elseif($repeatedtitle){
-        mostrar_repeatedtitle();
-      }
-      elseif($typecreated){
-        mostrar_typecreated();
-      }
-      elseif($repeatedtype){
-        mostrar_repeatedtype();
-      }
-      elseif($notcomplete){
-        mostrar_errornotcomplete();
+      if ($notcreated) {
+          mostrar_errornotcreated();
+      } elseif ($groupcreated) {
+          mostrar_groupcreated();
+      } elseif ($repeatedtitle) {
+          mostrar_repeatedtitle();
+      } elseif ($typecreated) {
+          mostrar_typecreated();
+      } elseif ($repeatedtype) {
+          mostrar_repeatedtype();
+      } elseif ($notcomplete) {
+          mostrar_errornotcomplete();
       }
     ?>
   </body>

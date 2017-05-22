@@ -2,13 +2,6 @@
    MUSIC OF THE SPHERES - Blanca de la Torre Fuertes
    ==========================================================================*/
 
-
-/*
-* {
-    cursor: url(../img/sol.png), auto;
-}
-*/
-
 .particlesbody {
     height: 100% !important;
     width: 100% !important;
@@ -389,4 +382,10 @@ li:hover i, tr:hover i {
 
 .select-admin{
   height: 40px;
+}
+
+/**++++++++++++++++++++++++++++ ADMIN PAGE***************************/
+
+.grouptext {
+  margin: 20px;
 }

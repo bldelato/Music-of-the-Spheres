@@ -35,6 +35,8 @@ if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminartipo' && !empty($
 
   // Eliminamos la relación entre los grupos del estilo de música y el usuario
 
+  
+
 }
 
 /* AÑADIR TIPO DE MÚSICA */
@@ -95,9 +97,9 @@ $sql = "SELECT type FROM `typesmusic`";
 $consulta = mysqli_query($db, $sql);
 
 while ($row = mysqli_fetch_assoc($consulta)) {
-  if (!in_array($row['type'], $nonaddedtypes) && !in_array($row['type'], $addedtypes)) {
-      $nonaddedtypes[]=$row['type'];
-  }
+    if (!in_array($row['type'], $nonaddedtypes) && !in_array($row['type'], $addedtypes)) {
+        $nonaddedtypes[]=$row['type'];
+    }
 }
 ?>
 

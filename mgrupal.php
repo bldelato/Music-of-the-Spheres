@@ -193,9 +193,13 @@ function mostrar_errornotcomplete() {
       <!-- BARRA GRUPOS -->
       <ul class="nav nav-tabs nav-justified">
         <?php
+        if(empty($grupos)){
+          echo "<li><a data-toggle='tab' href='#nogroups'> </a></li>";
+        } else {
           foreach ($grupos as $i=>$grupo){
-            echo  "<li><a data-toggle='tab' href='#tablamensajes-$i'>{$grupo['title']}</a></li>";
+            echo  "<li".($i==0 ? ' class=\'active\'':'')."><a data-toggle='tab' href='#tablamensajes-$i'>{$grupo['title']} - {$grupo['type']}</a></li>";
           }
+        }
         ?>
       </ul>
       <!-- FINAL BARRA GRUPOS -->
@@ -203,28 +207,34 @@ function mostrar_errornotcomplete() {
       <!-- INTERIOR DE LOS GRUPOS-->
       <div class="tab-content">
         <?php
-        foreach ($grupos as $i=>$grupo){
-          echo "<div id='tablamensajes-$i' class='tab-pane fade'>
-            <table class='table table-hover table-condensed table-responsive personaltable'>
-              <thead>
-                <tr>
-                  <th class='personaltitles'>Autor</th>
-                  <th class='personaltitles'>Título</th>
-                </tr>
-              </thead>
-              <tbody>";
-            $i=0;
-            while(isset($mensajes[$grupo['title']][$i])){
-              echo "<tr onclick='mostrar_mensaje($i, \"{$mensajes[$grupo['title']][$i]['title']}\", \"{$mensajes[$grupo['title']][$i]['idorigin']}\", \"{$mensajes[$grupo['title']][$i]['message']}\")' class='pointercursor'>
-                  <td>{$mensajes[$grupo['title']][$i]['idorigin']}</td>
-                  <td>{$mensajes[$grupo['title']][$i]['title']}</td>
-                </tr>";
-              ++$i;
-            }
-          echo "</tbody>
-              </table>
-              <button type='button' class='btn btn-primary btn-lg button-send-message' onclick='mostrar_enviarmensaje(\"{$grupo['title']}\")''>Enviar mensaje</button>
-          </div>";
+        if(empty($grupos)){
+          echo "<div id='nogroups' class='tab-pane fade in active'>
+          <p class='panel-title grouptext'>No coincides con las características de ningún grupo.<br>Prueba a añadir un estilo de música para poder compartir mensajes con otros usuarios que compartan tus gustos.</p></div>";
+        }
+        else {
+          foreach ($grupos as $i=>$grupo){
+            echo "<div id='tablamensajes-$i' class='tab-pane fade ".($i==0 ? 'in active':'')."'>
+              <table class='table table-hover table-condensed table-responsive personaltable'>
+                <thead>
+                  <tr>
+                    <th class='personaltitles'>Autor</th>
+                    <th class='personaltitles'>Título</th>
+                  </tr>
+                </thead>
+                <tbody>";
+              $i=0;
+              while(isset($mensajes[$grupo['title']][$i])){
+                echo "<tr onclick='mostrar_mensaje($i, \"{$mensajes[$grupo['title']][$i]['title']}\", \"{$mensajes[$grupo['title']][$i]['idorigin']}\", \"{$mensajes[$grupo['title']][$i]['message']}\")' class='pointercursor'>
+                    <td>{$mensajes[$grupo['title']][$i]['idorigin']}</td>
+                    <td>{$mensajes[$grupo['title']][$i]['title']}</td>
+                  </tr>";
+                ++$i;
+              }
+            echo "</tbody>
+                </table>
+                <button type='button' class='btn btn-primary btn-lg button-send-message' onclick='mostrar_enviarmensaje(\"{$grupo['title']}\")''>Enviar mensaje</button>
+            </div>";
+          }
         }
         ?>
       </div>

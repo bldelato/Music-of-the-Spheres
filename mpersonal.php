@@ -256,7 +256,7 @@ function mostrar_errornotcomplete() {
         </div>
 
         <!-- TABLA MENSAJES RECIBIDOS -->
-        <div id="recibidos" class="tab-pane fade  in active">
+        <div id="recibidos" class="tab-pane fade in active">
           <table class="table table-hover table-condensed table-responsive personaltable">
             <thead>
               <tr>
@@ -273,7 +273,7 @@ function mostrar_errornotcomplete() {
                   echo "<tr id='messagerow{$mensajesrecibidos[$i]['id']}'>
                       <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['idorigin']}</td>
                       <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['title']}</td>
-                      <td><i class='icono-".($mensajesrecibidos[$i]['leido'] ? 'commentEmpty':'comment')."'></i></td>
+                      <td><i class='icono-".($mensajesrecibidos[$i]['leido'] ? 'bookmarkEmpty':'bookmark')."'></i></td>
                       <td onclick='mostrar_respondermensaje(\"{$mensajesrecibidos[$i]['idorigin']}\")'><i class='icono-trash  pointercursor'></i></td>
                     </tr>";
                   ++$i;
@@ -342,7 +342,7 @@ function mostrar_errornotcomplete() {
             },
             success: function(data){
               console.log(data);
-              $('#messagerow'+id).find('i.icono-comment').removeClass('icono-comment').addClass('icono-commentEmpty');
+              $('#messagerow'+id).find('i.icono-bookmark').removeClass('icono-bookmark').addClass('icono-bookmarkEmpty');
             }
           });
         }
