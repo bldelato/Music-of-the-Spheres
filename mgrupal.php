@@ -180,7 +180,7 @@ function mostrar_errornotcomplete() {
         <li><a href="mpersonal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Personales</a></li>
         <li><a href="mglobal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Globales</a></li>
         <?php if($rol == 'admin'):?>
-          <li><a href="admin"  class=" navbar-element navbar-main-title barraBasica">Administrar Grupos</a></li>
+          <li><a href="admin"  class=" navbar-element navbar-main-title barraBasica">Administrar Grupos y Estilos</a></li>
         <?php endif; ?>
       </ul>
       <ul class="nav navbar-nav navbar-right">

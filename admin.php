@@ -19,6 +19,15 @@ if (!empty($_SESSION['user'])) {
    header('Location: login.php');
 }
 
+/* VARIABLES DE CONTROL DE ERRORES/FINALIZACIÓN */
+
+$notcreated = false;
+$groupcreated = false;
+$typecreated = false;
+$notcomplete = false;
+$repeatedtitle=false;
+$repeatedtype=false;
+
 /* ADMINISTRAR GRUPOS */
 
 $sql = "SELECT * FROM `groups`";
@@ -31,16 +40,9 @@ while ($row = mysqli_fetch_assoc($consulta)) {
   $grouptitles[]=$row['title'];
 }
 
-/* VARIABLES DE CONTROL DE ERRORES/FINALIZACIÓN */
-
-$notcreated = false;
-$groupcreated = false;
-$notcomplete = false;
-$repeatedtitle=false;
-
 /* CREAR UN GRUPO */
 
-if(!empty($_POST['complete']) && $_POST['complete']=='completeform'){
+if(!empty($_POST['complete']) && $_POST['complete']=='completeformgroup'){
   if (!empty($_POST['title']) && !empty($_POST['type']) && !empty($_POST['minage']) && !empty($_POST['maxage'])) {
     $titulo = $_POST['title'];
     $tipo = $_POST['type'];
@@ -105,14 +107,68 @@ if(!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminargrupo' && !empty($
   }
 }
 
-/* HACER LISTA DE ESTILOS DE MÚSICA */
+/* ADMINISTRAR ESTILOS DE MÚSICA */
 
-$sql = "SELECT DISTINCT type FROM `musictypes`";
+$sql = "SELECT type FROM `typesmusic`";
 $consulta = mysqli_query($db, $sql);
 $musictypes=[];
 
 while ($row = mysqli_fetch_assoc($consulta)) {
   $musictypes[] = $row['type'];
+}
+
+/* CREAR UN ESTILO */
+
+if(!empty($_POST['complete']) && $_POST['complete']=='completeformtype'){
+  if (!empty($_POST['typeofmusic'])) {
+    $tipoaañadir = $_POST['typeofmusic'];
+
+    // Si ya existe un estilo con ese nombre
+    if(in_array($tipoaañadir, $musictypes)){
+      $repeatedtype=true;
+    }
+    // Se crea el estilo
+    else{
+      $sql = "INSERT INTO typesmusic VALUES ('$tipoaañadir')";
+      $consulta = mysqli_query($db, $sql);
+      if(!$consulta){
+        $notcreated= true;
+      }
+      else {
+        $typecreated = true;
+
+        // Se refresca la lista de estilos
+        $sql = "SELECT DISTINCT type FROM `typesmusic`";
+        $consulta = mysqli_query($db, $sql);
+        $musictypes=[];
+
+        while ($row = mysqli_fetch_assoc($consulta)) {
+          $musictypes[] = $row['type'];
+        }
+      }
+    }
+  }
+  else{
+    $notcomplete = true;
+  }
+}
+
+/* ELIMINAR UN ESTILO */
+
+if(!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminarestilo' && !empty($_POST['estiloparaeliminar'])){
+  $typemusic = $_POST['estiloparaeliminar'];
+
+  $sql = "DELETE FROM `typesmusic` WHERE type='$typemusic'";
+  $consulta = mysqli_query($db, $sql);
+
+  // Se refresca la lista de estilos
+  $sql = "SELECT DISTINCT type FROM `typesmusic`";
+  $consulta = mysqli_query($db, $sql);
+  $musictypes=[];
+
+  while ($row = mysqli_fetch_assoc($consulta)) {
+    $musictypes[] = $row['type'];
+  }
 }
 
 /* FUNCIONES */
@@ -125,7 +181,7 @@ function mostrar_errornotcreated() {
   				<button type="button" class="close" data-dismiss="modal">&times;</button>
   			</div>
   			<div class="modal-body">
-  				<p class="text-danger">El grupo no se ha creado. Por favor, inténtelo de nuevo.</p>
+  				<p class="text-danger">No se ha creado correctamente. Por favor, inténtelo de nuevo.</p>
   			</div>
   			<div class="modal-footer">
   				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
@@ -151,7 +207,7 @@ function mostrar_groupcreated() {
   				<p class="text-success">El grupo se ha creado correctamente.</p>
   			</div>
   			<div class="modal-footer">
-  				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Close</button>
+  				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
   			</div>
   		</div>
   	</div>
@@ -162,6 +218,30 @@ function mostrar_groupcreated() {
   	</script>
   </div>';
   }
+
+  function mostrar_typecreated() {
+  	echo '<div class="modal fade myModal" role="dialog" id="modaltypecreated">
+    	<div class="modal-dialog">
+    		<div class="modal-content">
+    			<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+    			</div>
+    			<div class="modal-body">
+    				<p class="text-success">El estilo se ha añadido correctamente.</p>
+    			</div>
+    			<div class="modal-footer">
+    				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+    			</div>
+    		</div>
+    	</div>
+    	<script>
+    		$( document ).ready(function() {
+    			$("#modaltypecreated").modal();
+    		});
+    	</script>
+    </div>';
+    }
+
 function mostrar_errornotcomplete() {
 	echo '<div class="modal fade myModal" role="dialog" id="modalnotcomplete">
   	<div class="modal-dialog">
@@ -206,7 +286,30 @@ function mostrar_repeatedtitle() {
   		});
   	</script>
   </div>';
-  }
+}
+
+function mostrar_repeatedtype() {
+	echo '<div class="modal fade myModal" role="dialog" id="modalrepeatedtype">
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="modal-header">
+  				<button type="button" class="close" data-dismiss="modal">&times;</button>
+  			</div>
+  			<div class="modal-body">
+  				<p class="text-danger">Ese estilo ya existe, por favor inténtelo de nuevo.</p>
+  			</div>
+  			<div class="modal-footer">
+  				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+  			</div>
+  		</div>
+  	</div>
+  	<script>
+  		$( document ).ready(function() {
+  			$("#modalrepeatedtype").modal();
+  		});
+  	</script>
+  </div>';
+}
 ?>
 
 <!DOCTYPE html>
@@ -252,37 +355,78 @@ function mostrar_repeatedtitle() {
 
     <!-- TABLA DE GRUPOS -->
     <div  class="main-panel">
-      <table class="table table-hover table-condensed table-responsive personaltable">
-        <thead>
-          <tr>
-            <th class="personaltitles">Grupo</th>
-            <th class="personaltitles">Estilo</th>
-            <th class="personaltitles">Edad</th>
-            <th class="personaltitles">Eliminar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-            $i=0;
-            while(isset($grupos[$i])){
-              echo "<tr>
-                <td>{$grupos[$i]['title']}</td>
-                <td>{$grupos[$i]['type']}</td>
-                <td>{$grupos[$i]['minage']} - {$grupos[$i]['maxage']}</td>
-                <td  class='pointercursor' onclick='mostrar_eliminargrupo(\"{$grupos[$i]['title']}\")'><i class='icono-trash pointercursor'></i></td>
-              </tr>";
-              ++$i;
-            }
-          ?>
-        </tbody>
-      </table>
-      <!-- BOTÓN CREAR GRUPO -->
-      <div>
-        <button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton" onclick='mostrar_añadirgrupo()'>Crear grupo</button>
-      </div>
-      <!-- FINAL CREAR GRUPO -->
+      <!-- BARRA ADMINISTRACION-->
+      <ul class="nav nav-tabs nav-justified">
+        <li class="active"><a data-toggle="tab" href="#tablaadmingrupos">Grupos</a></li>
+        <li><a data-toggle="tab" href="#tablaadminestilos">Estilos</a></li>
+      </ul>
+      <!-- FINAL BARRA ADMINISTRACION-->
+
+      <div class="tab-content">
+        <!-- TABLA ADMINISTRAR GRUPOS -->
+        <div id="tablaadmingrupos" class="tab-pane fade in active">
+          <table class="table table-hover table-condensed table-responsive personaltable">
+            <thead>
+              <tr>
+                <th class="personaltitles">Grupo</th>
+                <th class="personaltitles">Estilo</th>
+                <th class="personaltitles">Edad</th>
+                <th class="personaltitles">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                $i=0;
+                while(isset($grupos[$i])){
+                  echo "<tr>
+                    <td>{$grupos[$i]['title']}</td>
+                    <td>{$grupos[$i]['type']}</td>
+                    <td>{$grupos[$i]['minage']} - {$grupos[$i]['maxage']}</td>
+                    <td  class='pointercursor' onclick='mostrar_eliminargrupo(\"{$grupos[$i]['title']}\")'><i class='icono-trash pointercursor'></i></td>
+                  </tr>";
+                  ++$i;
+                }
+              ?>
+            </tbody>
+          </table>
+          <!-- BOTÓN CREAR GRUPO -->
+          <div>
+            <button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton" onclick='mostrar_añadirgrupo()'>Crear grupo</button>
+          </div>
+          <!-- FINAL CREAR GRUPO -->
+        </div>
+        <!-- FINAL TABLA ADMINISTRAR GRUPOS -->
+
+        <!-- TABLA ADMINISTRAR ESTILOS -->
+        <div id="tablaadminestilos" class="tab-pane fade">
+          <table class="table table-hover table-condensed table-responsive personaltable">
+            <thead>
+              <tr>
+                <th class="personaltitles">Estilo</th>
+                <th class="personaltitles th_responder">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                $i=0;
+                while(isset($musictypes[$i])){
+                  echo "<tr>
+                    <td class='defaultcursor'>{$musictypes[$i]}</td>
+                    <td  class='pointercursor' onclick='mostrar_eliminarestilo(\"{$musictypes[$i]}\")'><i class='icono-trash pointercursor'></i></td>
+                  </tr>";
+                  ++$i;
+                }
+              ?>
+            </tbody>
+          </table>
+          <!-- BOTÓN CREAR ESTILO -->
+          <div>
+            <button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton" onclick='mostrar_añadirestilo()'>Crear estilo</button>
+          </div>
+          <!-- FINAL CREAR ESTILO -->
+        </div>
     </div>
-    <!-- FINAL TABLA DE GRUPOS -->
+    <!-- FINAL CONTENIDO ADMINISTRACION -->
 
     <!-- JAVASCRIPT -->
     <script>
@@ -291,8 +435,19 @@ function mostrar_repeatedtitle() {
         $('#grupoaeliminar').html(grupoaeliminar);
         $('#erasegroupmodal').modal();
       }
+
+      function mostrar_eliminarestilo(estiloaeliminar){
+        $('#erasestype').val(estiloaeliminar);
+        $('#estiloaeliminar').html(estiloaeliminar);
+        $('#erasetypemodal').modal();
+      }
+
       function mostrar_añadirgrupo(){
         $('#addgroupmodal').modal();
+      }
+
+      function mostrar_añadirestilo(){
+        $('#addtypemodal').modal();
       }
     </script>
 
@@ -320,6 +475,31 @@ function mostrar_repeatedtitle() {
       </div>
     </div>
     <!--FINAL Modal ELIMINAR GRUPO-->
+
+    <!-- Modal ELIMINAR ESTILO-->
+    <div id="erasetypemodal" class="modal fade myModalmessage" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title message-title">ELIMINAR ESTILO </h4>
+          </div>
+          <div class="modal-body">
+            <form action="" method="POST" id="formerasetype">
+              <div class="panel-body form-group form">
+                  ¿Estás seguro de querer eliminar <span id="estiloaeliminar" class="text-danger musictype"></span> de la lista de estilos de música?
+                  <input type="hidden" class="form-control" name="eliminar" value="eliminarestilo">
+                  <input type="hidden" class="form-control" name="estiloparaeliminar" value="" id="erasestype">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-default error-button-close" form="formerasetype">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--FINAL Modal ELIMINAR ESTILO-->
 
     <!-- Modal  AÑADIR GRUPO-->
     <div id="addgroupmodal" class="modal fade myModalmessage" role="dialog">
@@ -351,7 +531,7 @@ function mostrar_repeatedtitle() {
                   echo $_POST['maxage'];
                 } ?>">
         				<br>
-                <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeform">
+                <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeformgroup">
           		</div>
           	</form>
           </div>
@@ -363,6 +543,31 @@ function mostrar_repeatedtitle() {
     </div>
     <!--FINAL Modal AÑADIR GRUPO-->
 
+    <!-- Modal  AÑADIR ESTILO-->
+    <div id="addtypemodal" class="modal fade myModalmessage" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title message-title">AÑADIR ESTILO </h4>
+          </div>
+          <div class="modal-body">
+            <form action="" method="POST" id="formaddtype">
+          		<div class="panel-body form-group form">
+        				<input type="text" class="form-control" placeholder="Título" name="typeofmusic" value="<?php if(!empty($_POST['typeofmusic']) && (!$typecreated || $repeatedtype)) {
+                  echo $_POST['typeofmusic']; } ?>">
+                <input type="hidden" class="form-control" placeholder="Título" name="complete" value="completeformtype">
+          		</div>
+          	</form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-default error-button-close" form="formaddtype">CREAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--FINAL Modal AÑADIR ESTILO-->
+
     <!-- MENSAJES DE CONTROL DE ERRORES/FINALIZACIÓN -->
     <?php
       if($notcreated){
@@ -373,6 +578,12 @@ function mostrar_repeatedtitle() {
       }
       elseif($repeatedtitle){
         mostrar_repeatedtitle();
+      }
+      elseif($typecreated){
+        mostrar_typecreated();
+      }
+      elseif($repeatedtype){
+        mostrar_repeatedtype();
       }
       elseif($notcomplete){
         mostrar_errornotcomplete();

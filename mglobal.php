@@ -19,6 +19,13 @@ if (!empty($_SESSION['user'])) {
     header('Location: login.php');
 }
 
+/* ROL DEL USUARIO */
+
+$sql="SELECT rol FROM users WHERE id='$user'";
+$consulta = mysqli_query($db, $sql);
+$row=mysqli_fetch_assoc($consulta);
+$rol = $row['rol'];
+
 /* VARIABLES DE CONTROL DE ERRORES/FINALIZACIÓN */
 
 $notsent = false;
@@ -158,6 +165,9 @@ function mostrar_errornotcomplete() {
           <li><a href="main" class=" navbar-element navbar-main-title barraBasica">Home</a></li>
           <li><a href="mpersonal" class=" navbar-element navbar-main-title barraBasica">Mensajes Personales</a></li>
           <li><a href="mgrupal" class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
+          <?php if($rol == 'admin'):?>
+            <li><a href="admin"  class=" navbar-element navbar-main-title barraBasica">Administrar Grupos y Estilos</a></li>
+          <?php endif; ?>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>

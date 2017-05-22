@@ -21,6 +21,13 @@ if (!empty($_SESSION['user'])) {
     header('Location: login.php');
 }
 
+/* ROL DEL USUARIO */
+
+$sql="SELECT rol FROM users WHERE id='$user'";
+$consulta = mysqli_query($db, $sql);
+$row=mysqli_fetch_assoc($consulta);
+$rol = $row['rol'];
+
 /* HACER LISTA DE MENSAJES (ENVIADOS Y RECIBIDOS) */
 
 $sql = "SELECT * FROM `messages` WHERE iddestination='$user' OR (idorigin='$user' AND iddestination IS NOT NULL) ORDER BY id DESC";
@@ -205,6 +212,9 @@ function mostrar_errornotcomplete() {
           <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Home</a></li>
           <li><a href="mglobal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Globales</a></li>
           <li><a href="mgrupal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Grupales</a></li>
+          <?php if($rol == 'admin'):?>
+            <li><a href="admin"  class=" navbar-element navbar-main-title barraBasica">Administrar Grupos y Estilos</a></li>
+          <?php endif; ?>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>
@@ -263,8 +273,8 @@ function mostrar_errornotcomplete() {
                   echo "<tr id='messagerow{$mensajesrecibidos[$i]['id']}'>
                       <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['idorigin']}</td>
                       <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['title']}</td>
-                      <td><span class='glyphicon glyphicon-eye-".($mensajesrecibidos[$i]['leido'] ? 'open':'close')."'></span></td>
-                      <td onclick='mostrar_respondermensaje(\"{$mensajesrecibidos[$i]['idorigin']}\")'><span class='glyphicon glyphicon-share-alt pointercursor'></span></td>
+                      <td><i class='icono-".($mensajesrecibidos[$i]['leido'] ? 'commentEmpty':'comment')."'></i></td>
+                      <td onclick='mostrar_respondermensaje(\"{$mensajesrecibidos[$i]['idorigin']}\")'><i class='icono-trash  pointercursor'></i></td>
                     </tr>";
                   ++$i;
                 }
@@ -332,7 +342,7 @@ function mostrar_errornotcomplete() {
             },
             success: function(data){
               console.log(data);
-              $('#messagerow'+id).find('span.glyphicon-eye-close').removeClass('glyphicon-eye-close').addClass('glyphicon-eye-open');
+              $('#messagerow'+id).find('i.icono-comment').removeClass('icono-comment').addClass('icono-commentEmpty');
             }
           });
         }

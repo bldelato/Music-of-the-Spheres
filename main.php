@@ -34,7 +34,7 @@ if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminartipo' && !empty($
     $consulta = mysqli_query($db, $sql);
 
   // Eliminamos la relación entre los grupos del estilo de música y el usuario
-  
+
 }
 
 /* AÑADIR TIPO DE MÚSICA */
@@ -87,6 +87,16 @@ while ($row = mysqli_fetch_assoc($consulta)) {
       if (!in_array($row['type'], $nonaddedtypes)) {
           $nonaddedtypes[]=$row['type'];
       }
+  }
+}
+
+//Por si hay un estilo de música que no ha añadido nadie
+$sql = "SELECT type FROM `typesmusic`";
+$consulta = mysqli_query($db, $sql);
+
+while ($row = mysqli_fetch_assoc($consulta)) {
+  if (!in_array($row['type'], $nonaddedtypes) && !in_array($row['type'], $addedtypes)) {
+      $nonaddedtypes[]=$row['type'];
   }
 }
 ?>
@@ -314,7 +324,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
     <!-- SI EL USUARIO ES ADMINISTRADOR, MUESTRA EL BOTÓN DE ADMINISTRAR GRUPOS -->
     <?php if ($usuario['rol'] == 'admin'):?>
     <div>
-      <a href="admin"><button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton">Administrar grupos</button></a>
+      <a href="admin"><button type="button" class="btn btn-primary btn-lg button-send-message groupsbutton">Administrar grupos y estilos</button></a>
     </div>
   <?php endif; ?>
   </body>
