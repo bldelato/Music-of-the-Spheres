@@ -1,20 +1,25 @@
 <?php
+/* CONECTARSE A LA BASE DE DATOS */
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 session_start();
 $db = mysqli_connect('localhost', 'musicofthesphere', 'adminMS', 'musicofthesphere');
 if (!$db) {
-    die('Error al conectarse con la base de datos');
+  die('Error al conectarse con la base de datos');
 }
+
+/* ADMINISTRAR EL USUARIO */
 
 $user = false;
 
 if (!empty($_SESSION['user'])) {
-    $user = $_SESSION['user'];
+  $user = $_SESSION['user'];
 } else {
-      header('Location: login.php');
+    header('Location: login.php');
 }
+
+/* MOSTRAR LOS GRUPOS */
 
 $sql = "SELECT * FROM groups, groupsrelation WHERE groupsrelation.iduser='$user' AND groups.title=groupsrelation.grouptitle";
 $consulta = mysqli_query($db, $sql);
@@ -25,6 +30,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
   $grupos[] = $row;
   $grouptitles[]=$row['title'];
 
+  // Almacenar los mensajes de cada grupo
   $sql="SELECT * FROM groupmessages WHERE destinationgroup='{$row['title']}' ORDER BY id DESC";
   $consulta2 = mysqli_query($db, $sql);
   $mensajes[$row['title']] = [];
@@ -33,33 +39,20 @@ while ($row = mysqli_fetch_assoc($consulta)) {
   }
 }
 
-$notcreated = false;
-$groupcreated = false;
+/* VARIABLES DE CONTROL DE ERRORES/FINALIZACIÓN */
+
 $messagesent = false;
 $notsent = false;
 $notcomplete = false;
-$repeatedtitle=false;
+
+/* ROL DEL USUARIO */
 
 $sql="SELECT rol FROM users WHERE id='$user'";
 $consulta = mysqli_query($db, $sql);
 $row=mysqli_fetch_assoc($consulta);
 $rol = $row['rol'];
 
-
-$sql = "SELECT DISTINCT type FROM `musictypes`";
-$consulta = mysqli_query($db, $sql);
-$musictypes=[];
-while ($row = mysqli_fetch_assoc($consulta)) {
-  $musictypes[] = $row['type'];
-}
-
-$sql = "SELECT * FROM `messages` WHERE iddestination IS NULL ORDER BY id DESC";
-$consulta = mysqli_query($db, $sql);
-
-while ($row = mysqli_fetch_assoc($consulta)) {
-  $mensajesrecibidos[] = $row;
-}
-
+/* ENVIAR MENSAJE GRUPAL */
 
 if(!empty($_POST['complete']) && $_POST['complete']=='completeform'){
   if (!empty($_POST['titulo']) && !empty($_POST['mensaje'])) {
@@ -81,150 +74,97 @@ if(!empty($_POST['complete']) && $_POST['complete']=='completeform'){
   }
 }
 
-function mostrar_errornotcreated() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalnotcreated">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body">
-				<p class="text-danger">El grupo no se ha creado. Por favor, inténtelo de nuevo.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-
-	</div>
-	<script>
-		$( document ).ready(function() {
-			$("#modalnotcreated").modal();
-		});
-	</script>
-</div>';
-}
+/* FUNCIONES */
 
 function mostrar_errornotsent() {
 	echo '<div class="modal fade myModal" role="dialog" id="modalnotsent">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body">
-				<p class="text-danger">El mensaje no se ha enviado. Por favor, inténtelo de nuevo.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-
-	</div>
-	<script>
-		$( document ).ready(function() {
-			$("#modalnotsent").modal();
-		});
-	</script>
-</div>';
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="modal-header">
+  				<button type="button" class="close" data-dismiss="modal">&times;</button>
+  			</div>
+  			<div class="modal-body">
+  				<p class="text-danger">El mensaje no se ha enviado. Por favor, inténtelo de nuevo.</p>
+  			</div>
+  			<div class="modal-footer">
+  				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+  			</div>
+  		</div>
+  	</div>
+  	<script>
+  		$( document ).ready(function() {
+  			$("#modalnotsent").modal();
+  		});
+  	</script>
+  </div>';
 }
 
-function mostrar_errormessagesent() {
+function mostrar_messagesent() {
 	echo '<div class="modal fade myModal" role="dialog" id="modalmessagesent">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body">
-				<p class="text-success">El mensaje se ha enviado correctamente.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-
-	</div>
-	<script>
-		$( document ).ready(function() {
-			$("#modalmessagesent").modal();
-		});
-	</script>
-</div>';
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="modal-header">
+  				<button type="button" class="close" data-dismiss="modal">&times;</button>
+  			</div>
+  			<div class="modal-body">
+  				<p class="text-success">El mensaje se ha enviado correctamente.</p>
+  			</div>
+  			<div class="modal-footer">
+  				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+  			</div>
+  		</div>
+  	</div>
+  	<script>
+  		$( document ).ready(function() {
+  			$("#modalmessagesent").modal();
+  		});
+  	</script>
+  </div>';
 }
 
 function mostrar_errornotcomplete() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalmessagesent">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body">
-				<p class="text-danger">No ha rellenado todos los campos, por favor complete el formulario.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-
-	</div>
-	<script>
-		$( document ).ready(function() {
-			$("#modalmessagesent").modal();
-		});
-	</script>
-</div>';
+	echo '<div class="modal fade myModal" role="dialog" id="modalmessagenotcomplete">
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="modal-header">
+  				<button type="button" class="close" data-dismiss="modal">&times;</button>
+  			</div>
+  			<div class="modal-body">
+  				<p class="text-danger">No ha rellenado todos los campos, por favor complete el formulario.</p>
+  			</div>
+  			<div class="modal-footer">
+  				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+  			</div>
+  		</div>
+  	</div>
+  	<script>
+  		$( document ).ready(function() {
+  			$("#modalmessagenotcomplete").modal();
+  		});
+  	</script>
+  </div>';
 }
-
-function mostrar_repeatedtitle() {
-	echo '<div class="modal fade myModal" role="dialog" id="modalrepeatedtitle">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body">
-				<p class="text-danger">Ese título ya está en uso, por favor inténtelo de nuevo.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-
-	</div>
-	<script>
-		$( document ).ready(function() {
-			$("#modalrepeatedtitle").modal();
-		});
-	</script>
-</div>';
-}
-
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 	<head>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+    <script src="lib/js/jquery.min.js"></script>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/bootstrap.min.css">
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+    <script src="lib/js/bootstrap.min.js"></script>
+    <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
+    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/jquery-ui.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
+    <script src="lib/js/jquery-ui.min.js"></script>
 
-		<link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Lobster+Two|Rajdhani|Poiret+One" rel="stylesheet">
-    <link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">
+    <link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
+    <!--<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">-->
+    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/amaticSC-font.css">
+    <!--<link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">-->
+    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/icono.min.css">
 
     <link rel='shortcut icon' type='image/x-icon' href='img/note-icon.png' />
 		<title>MUSIC OF THE SPHERES</title>
@@ -233,13 +173,13 @@ function mostrar_repeatedtitle() {
 	</head>
 
 	<body id="mainbody">
-
+    <!-- BARRA SUPERIOR -->
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-          <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Home</a></li>
-          <li><a href="mpersonal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Personales</a></li>
-          <li><a href="mglobal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Globales</a></li>
-          <?php if($rol == 'admin'):?>
+        <li><a href="main"  class=" navbar-element navbar-main-title barraBasica">Home</a></li>
+        <li><a href="mpersonal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Personales</a></li>
+        <li><a href="mglobal"  class=" navbar-element navbar-main-title barraBasica">Mensajes Globales</a></li>
+        <?php if($rol == 'admin'):?>
           <li><a href="admin"  class=" navbar-element navbar-main-title barraBasica">Administrar Grupos</a></li>
         <?php endif; ?>
       </ul>
@@ -247,10 +187,10 @@ function mostrar_repeatedtitle() {
         <li><a href="login.php?logout" title="Log out"><i class="icono-power"></i></a></li>
       </ul>
     </div>
+    <!-- FINAL BARRA SUPERIOR -->
 
-
-    <!-- MUNDO IZQUIERDO -> MENSAJES PERSONALES -->
     <div  class="main-panel">
+      <!-- BARRA GRUPOS -->
       <ul class="nav nav-tabs nav-justified">
         <?php
           foreach ($grupos as $i=>$grupo){
@@ -258,85 +198,83 @@ function mostrar_repeatedtitle() {
           }
         ?>
       </ul>
+      <!-- FINAL BARRA GRUPOS -->
 
-      <!-- LO DE DENTRO DE LOS GRUPOS-->
+      <!-- INTERIOR DE LOS GRUPOS-->
       <div class="tab-content">
         <?php
         foreach ($grupos as $i=>$grupo){
           echo "<div id='tablamensajes-$i' class='tab-pane fade'>
             <table class='table table-hover table-condensed table-responsive personaltable'>
-                <thead>
-                    <tr>
-                      <th class='personaltitles'>Autor</th>
-                      <th class='personaltitles'>Título</th>
-                    </tr>
-                </thead>
-                <tbody>";
-                    $i=0;
-                    while(isset($mensajes[$grupo['title']][$i])){
-                      echo "<tr onclick='mostrar_mensaje($i, \"{$mensajes[$grupo['title']][$i]['title']}\", \"{$mensajes[$grupo['title']][$i]['idorigin']}\", \"{$mensajes[$grupo['title']][$i]['message']}\")' class='pointercursor'>
-                          <td>{$mensajes[$grupo['title']][$i]['idorigin']}</td>
-                          <td>{$mensajes[$grupo['title']][$i]['title']}</td>
-                        </tr>";
-
-                      ++$i;
-                    }
-                echo "</tbody>
+              <thead>
+                <tr>
+                  <th class='personaltitles'>Autor</th>
+                  <th class='personaltitles'>Título</th>
+                </tr>
+              </thead>
+              <tbody>";
+            $i=0;
+            while(isset($mensajes[$grupo['title']][$i])){
+              echo "<tr onclick='mostrar_mensaje($i, \"{$mensajes[$grupo['title']][$i]['title']}\", \"{$mensajes[$grupo['title']][$i]['idorigin']}\", \"{$mensajes[$grupo['title']][$i]['message']}\")' class='pointercursor'>
+                  <td>{$mensajes[$grupo['title']][$i]['idorigin']}</td>
+                  <td>{$mensajes[$grupo['title']][$i]['title']}</td>
+                </tr>";
+              ++$i;
+            }
+          echo "</tbody>
               </table>
               <button type='button' class='btn btn-primary btn-lg button-send-message' onclick='mostrar_enviarmensaje(\"{$grupo['title']}\")''>Enviar mensaje</button>
           </div>";
         }
         ?>
       </div>
-      <!-- END LO DE DENTRO DE LOS GRUPOS-->
+      <!-- FINAL INTERIOR DE LOS GRUPOS-->
 
-      <!-- Modal content-->
-      <div id="messageModal" class="modal fade myModal" role="dialog">
-      <div class="modal-dialog">
-
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title message-title">De: <span id="messageauthor"></h4>
-            <h4 class="modal-title message-title">Título: <span id="messagetitle"></span></h4>
-          </div>
-          <div class="modal-body">
-            <p id="messagebody"></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+      <!-- MODAL MENSAJE GRUPAL-->
+      <div id="messageModalgrupal" class="modal fade myModal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title message-title">De: <span id="messageauthor"></h4>
+              <h4 class="modal-title message-title">Título: <span id="messagetitle"></span></h4>
+            </div>
+            <div class="modal-body">
+              <p id="messagebody"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default error-button-close" data-dismiss="modal">Cerrar</button>
+            </div>
           </div>
         </div>
-
       </div>
+      <!-- FINAL MODAL MENSAJE GRUPAL-->
 
-    </div>
-    <!-- Modal content-->
-    <script>
-      function mostrar_mensaje(i, messagetitle, messageauthor, messagebody) {
-        $('#messagetitle').html(messagetitle);
-        $('#messageauthor').html(messageauthor);
-        $('#messagebody').html(messagebody);
-        $('#messageModal').modal();
-      }
-      function mostrar_enviarmensaje(groupdestination){
-        $('#groupdestination').val(groupdestination);
-        $('#sendmessagegrupalModal').modal();
-      }
-    </script>
+      <!-- JAVASCRIPT-->
+      <script>
+        function mostrar_mensaje(i, messagetitle, messageauthor, messagebody) {
+          $('#messagetitle').html(messagetitle);
+          $('#messageauthor').html(messageauthor);
+          $('#messagebody').html(messagebody);
+          $('#messageModalgrupal').modal();
+        }
+        function mostrar_enviarmensaje(groupdestination){
+          $('#groupdestination').val(groupdestination);
+          $('#sendmessagegrupalModal').modal();
+        }
+      </script>
 
-    <!-- Modal  ENVIAR MENSAJE-->
-    <div id="sendmessagegrupalModal" class="modal fade myModalmessage" role="dialog">
-      <div class="modal-dialog">
-
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title message-title">REDACTAR MENSAJE </h4>
-          </div>
-          <div class="modal-body">
-            <form action="" method="POST" id="formsendmessagegroup">
-              <div class="panel-body form-group form">
+      <!-- Modal  ENVIAR MENSAJE-->
+      <div id="sendmessagegrupalModal" class="modal fade myModalmessage" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title message-title">REDACTAR MENSAJE </h4>
+            </div>
+            <div class="modal-body">
+              <form action="" method="POST" id="formsendmessagegroup">
+                <div class="panel-body form-group form">
                   <input type="text" class="form-control" placeholder="Título" name="titulo" value="<?php if(!empty($_POST['titulo']) && !$messagesent) {
                     echo $_POST['titulo'];
                   } ?>">
@@ -346,42 +284,29 @@ function mostrar_repeatedtitle() {
                   <textarea class="form-control" rows="5" name="mensaje" placeholder="Mensaje"><?php if(!empty($_POST['mensaje']) && !$messagesent) {
                     echo $_POST['mensaje'];
                   } ?></textarea>
-              </div>
-            </form>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-default error-button-close" form="formsendmessagegroup">ENVIAR</button>
+            </div>
           </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-default error-button-close" form="formsendmessagegroup">ENVIAR</button>
         </div>
       </div>
-    </div>
-  </div>
-  <!--END  Modal content-->
-
-
-
+    <!-- FINAL Modal  ENVIAR MENSAJE-->
     </div>
 
-    <!--  MENSAJES GRUPALES -->
+    <!--  MENSAJES DE CONTROL DE ERRORES/FINALIZACIÓN -->
     <?php
-    if($notcreated){
-      mostrar_errornotcreated();
-    }
-    elseif($groupcreated){
-      mostrar_groupcreated();
-    }
-    elseif($repeatedtitle){
-      mostrar_repeatedtitle();
-    }
-    elseif($notcomplete){
-      mostrar_errornotcomplete();
-    }
-    elseif($messagesent){
-      mostrar_errormessagesent();
-    }
-    elseif($notsent){
-      mostrar_errornotsent();
-    }
+      if($notcomplete){
+        mostrar_errornotcomplete();
+      }
+      elseif($messagesent){
+        mostrar_messagesent();
+      }
+      elseif($notsent){
+        mostrar_errornotsent();
+      }
     ?>
-
   </body>
 </html>
