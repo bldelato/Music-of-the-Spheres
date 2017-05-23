@@ -31,12 +31,16 @@ if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminartipo' && !empty($
 
   // Eliminamos la relación entre el estilo de música y el usuario
   $sql = "DELETE FROM `musictypes` WHERE id='$user' AND type='$type'";
-    $consulta = mysqli_query($db, $sql);
+  $consulta = mysqli_query($db, $sql);
 
   // Eliminamos la relación entre los grupos del estilo de música y el usuario
 
-  
-
+  $sql = "SELECT * FROM `groups` WHERE type='$type'";
+  $consulta = mysqli_query($db, $sql);
+  while ($row = mysqli_fetch_assoc($consulta)) {
+      $sql = "DELETE FROM `groupsrelation` WHERE iduser='$user' AND grouptitle='{$row['title']}'";
+      $consulta2 = mysqli_query($db, $sql);
+  }
 }
 
 /* AÑADIR TIPO DE MÚSICA */

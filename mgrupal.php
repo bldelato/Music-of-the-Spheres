@@ -224,7 +224,9 @@ function mostrar_errornotcomplete() {
                 <tbody>";
               $i=0;
               while(isset($mensajes[$grupo['title']][$i])){
-                echo "<tr onclick='mostrar_mensaje($i, \"{$mensajes[$grupo['title']][$i]['title']}\", \"{$mensajes[$grupo['title']][$i]['idorigin']}\", \"{$mensajes[$grupo['title']][$i]['message']}\")' class='pointercursor'>
+                $messageText = str_replace("\r\n", "<br>", $mensajes[$grupo['title']][$i]['message']);
+                $messageText = str_replace("\n", "<br>", $messageText);
+                echo "<tr onclick='mostrar_mensaje($i, \"{$mensajes[$grupo['title']][$i]['title']}\", \"{$mensajes[$grupo['title']][$i]['idorigin']}\", \"{$messageText}\")' class='pointercursor'>
                     <td>{$mensajes[$grupo['title']][$i]['idorigin']}</td>
                     <td>{$mensajes[$grupo['title']][$i]['title']}</td>
                   </tr>";

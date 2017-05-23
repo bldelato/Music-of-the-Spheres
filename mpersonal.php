@@ -244,7 +244,9 @@ function mostrar_errornotcomplete() {
               <?php
                 $i=0;
                 while(isset($mensajesenviados[$i])){
-                  echo "<tr class='pointercursor' onclick='mostrar_mensajeenviado($i, \"{$mensajesenviados[$i]['title']}\", \"{$mensajesenviados[$i]['iddestination']}\", \"{$mensajesenviados[$i]['message']}\")'>
+                  $messageText = str_replace("\r\n", "<br>", $mensajesenviados[$i]['message']);
+                  $messageText = str_replace("\n", "<br>", $messageText);
+                  echo "<tr class='pointercursor' onclick='mostrar_mensajeenviado($i, \"{$mensajesenviados[$i]['title']}\", \"{$mensajesenviados[$i]['iddestination']}\", \"{$messageText}\")'>
                     <td>{$mensajesenviados[$i]['iddestination']}</td>
                     <td>{$mensajesenviados[$i]['title']}</td>
                   </tr>";
@@ -270,11 +272,13 @@ function mostrar_errornotcomplete() {
               <?php
                 $i=0;
                 while(isset($mensajesrecibidos[$i])){
+                  $messageText = str_replace("\r\n", "<br>", $mensajesrecibidos[$i]['message']);
+                  $messageText = str_replace("\n", "<br>", $messageText);
                   echo "<tr id='messagerow{$mensajesrecibidos[$i]['id']}'>
-                      <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['idorigin']}</td>
-                      <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>{$mensajesrecibidos[$i]['title']}</td>
+                      <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$messageText}\")' class='pointercursor'>{$mensajesrecibidos[$i]['idorigin']}</td>
+                      <td onclick='mostrar_mensajerecibido($i, \"{$mensajesrecibidos[$i]['id']}\", \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$messageText}\")' class='pointercursor'>{$mensajesrecibidos[$i]['title']}</td>
                       <td><i class='icono-".($mensajesrecibidos[$i]['leido'] ? 'bookmarkEmpty':'bookmark')."'></i></td>
-                      <td onclick='mostrar_respondermensaje(\"{$mensajesrecibidos[$i]['idorigin']}\")'><i class='icono-trash  pointercursor'></i></td>
+                      <td onclick='mostrar_respondermensaje(\"{$mensajesrecibidos[$i]['idorigin']}\")'><i class='icono-caretRightCircle  pointercursor'></i></td>
                     </tr>";
                   ++$i;
                 }

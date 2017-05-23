@@ -64,26 +64,26 @@ if (!empty($_POST['complete']) && $_POST['complete']=='completeformgroup') {
 
         // Se comprueba los usuarios que podrían pertenecer a ese grupo
         $sql = "SELECT users.id FROM users, musictypes WHERE age >='$minage' AND age<='$maxage' AND musictypes.id=users.id AND musictypes.type='$tipo'";
-            $consulta = mysqli_query($db, $sql);
-            while ($row = mysqli_fetch_assoc($consulta)) {
-                $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('$titulo','{$row['id']}')";
-                $consulta2 = mysqli_query($db, $sql);
-            }
+        $consulta = mysqli_query($db, $sql);
+        while ($row = mysqli_fetch_assoc($consulta)) {
+            $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('$titulo','{$row['id']}')";
+            $consulta2 = mysqli_query($db, $sql);
+        }
 
         // Se refresca la lista de grupos
         $sql = "SELECT * FROM `groups`";
-            $consulta = mysqli_query($db, $sql);
-            $grupos=[];
-            $grouptitles =[];
-            while ($row = mysqli_fetch_assoc($consulta)) {
-                $grupos[] = $row;
-                $grouptitles[]=$row['title'];
-            }
+        $consulta = mysqli_query($db, $sql);
+        $grupos=[];
+        $grouptitles =[];
+        while ($row = mysqli_fetch_assoc($consulta)) {
+            $grupos[] = $row;
+            $grouptitles[]=$row['title'];
         }
+      }
     }
-    } else {
-        $notcomplete = true;
-    }
+  } else {
+      $notcomplete = true;
+  }
 }
 
 /* ELIMINAR UN GRUPO */

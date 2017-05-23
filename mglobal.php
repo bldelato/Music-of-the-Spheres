@@ -188,7 +188,9 @@ function mostrar_errornotcomplete() {
           <?php
             $i=0;
             while (isset($mensajesrecibidos[$i])) {
-                echo "<tr onclick='mostrar_mensaje($i, \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$mensajesrecibidos[$i]['message']}\")' class='pointercursor'>
+              $messageText = str_replace("\r\n", "<br>", $mensajesrecibidos[$i]['message']);
+              $messageText = str_replace("\n", "<br>", $messageText);
+                echo "<tr onclick='mostrar_mensaje($i, \"{$mensajesrecibidos[$i]['title']}\", \"{$mensajesrecibidos[$i]['idorigin']}\", \"{$messageText}\")' class='pointercursor'>
                   <td>{$mensajesrecibidos[$i]['idorigin']}</td>
                   <td>{$mensajesrecibidos[$i]['title']}</td>
                 </tr>";
