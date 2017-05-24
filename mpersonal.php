@@ -1,29 +1,14 @@
 <?php
-/* CONECTARSE A LA BASE DE DATOS */
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require('init.php');
 
-session_start();
-$db = mysqli_connect('localhost', 'musicofthesphere', 'adminMS', 'musicofthesphere');
-if (!$db) {
-  die('Error al conectarse con la base de datos');
-}
+/* ADMINISTRAR MENSAJES USUARIO */
 
-/* ADMINISTRAR EL USUARIO */
-
-$user = false;
 $noleidospersonales = 0;
 $noleidosglobales = 0;
 
-if (!empty($_SESSION['user'])) {
-  $user = $_SESSION['user'];
-} else {
-    header('Location: login.php');
-}
-
 /* ROL DEL USUARIO */
 
-$sql="SELECT rol FROM users WHERE id='$user'";
+$sql="SELECT rol FROM usuarios WHERE id='$user'";
 $consulta = mysqli_query($db, $sql);
 $row=mysqli_fetch_assoc($consulta);
 $rol = $row['rol'];
@@ -60,7 +45,7 @@ if(!empty($_POST['complete']) && $_POST['complete']=='completeform'){
     $titulo = $_POST['titulo'];
     $mensaje = $_POST['mensaje'];
 
-    $sql = "SELECT * FROM users WHERE id='$destinatario'";
+    $sql = "SELECT * FROM usuarios WHERE id='$destinatario'";
     $consulta = mysqli_query($db, $sql);
     $fila = mysqli_fetch_assoc($consulta);
     // Si el destinatario es erroneo
@@ -182,27 +167,7 @@ function mostrar_errornotcomplete() {
 <!DOCTYPE html>
 <html lang="es">
 	<head>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
-    <script src="lib/js/jquery.min.js"></script>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/bootstrap.min.css">
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-    <script src="lib/js/bootstrap.min.js"></script>
-    <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/jquery-ui.css">
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
-    <script src="lib/js/jquery-ui.min.js"></script>
-
-    <link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
-    <!--<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/amaticSC-font.css">
-    <!--<link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/icono.min.css">
-
-    <link rel='shortcut icon' type='image/x-icon' href='img/note-icon.png'/>
-		<title>MUSIC OF THE SPHERES</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <?php require('head.html'); ?>
 	</head>
 
 	<body id="mainbody">

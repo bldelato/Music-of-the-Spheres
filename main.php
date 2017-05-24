@@ -1,26 +1,11 @@
 <?php
-/* CONECTARSE A LA BASE DE DATOS */
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require('init.php');
 
-session_start();
-$db = mysqli_connect('localhost', 'musicofthesphere', 'adminMS', 'musicofthesphere');
-if (!$db) {
-    die('Error al conectarse con la base de datos');
-}
+/* ADMINISTRAR USUARIO */
 
-/* ADMINISTRAR EL USUARIO */
-
-$user = false;
 $noleidospersonales = 0;
 
-if (!empty($_SESSION['user'])) {
-    $user = $_SESSION['user'];
-} else {
-    header('Location: login.php');
-}
-
-$sql = "SELECT * FROM `users` WHERE id='$user'";
+$sql = "SELECT * FROM `usuarios` WHERE id='$user'";
 $consulta = mysqli_query($db, $sql);
 $usuario = mysqli_fetch_assoc($consulta);
 
@@ -35,10 +20,10 @@ if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminartipo' && !empty($
 
   // Eliminamos la relación entre los grupos del estilo de música y el usuario
 
-  $sql = "SELECT * FROM `groups` WHERE type='$type'";
+  $sql = "SELECT * FROM `grupos` WHERE type='$type'";
   $consulta = mysqli_query($db, $sql);
   while ($row = mysqli_fetch_assoc($consulta)) {
-      $sql = "DELETE FROM `groupsrelation` WHERE iduser='$user' AND grouptitle='{$row['title']}'";
+      $sql = "DELETE FROM `relacion_usuario_grupo` WHERE iduser='$user' AND grouptitle='{$row['title']}'";
       $consulta2 = mysqli_query($db, $sql);
   }
 }
@@ -53,10 +38,10 @@ if (!empty($_POST['añadir']) && $_POST['añadir']=='añadirtipo' && !empty($_PO
     $consulta = mysqli_query($db, $sql);
 
   // Añadimos al usuario a los grupos de música relacionados con el nuevo estilo
-  $sql="SELECT groups.title FROM groups, users, musictypes WHERE users.id = '$user' AND users.age>=minage AND users.age<=maxage AND musictypes.id=users.id AND musictypes.type='$type' AND groups.type='$type'";
+  $sql="SELECT grupos.title FROM grupos, usuarios, musictypes WHERE usuarios.id = '$user' AND usuarios.age>=minage AND usuarios.age<=maxage AND musictypes.id=usuarios.id AND musictypes.type='$type' AND grupos.type='$type'";
     $consulta = mysqli_query($db, $sql);
     while ($row = mysqli_fetch_assoc($consulta)) {
-        $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('{$row['title']}', '$user')";
+        $sql="INSERT INTO relacion_usuario_grupo(grouptitle, iduser) VALUES ('{$row['title']}', '$user')";
         $consulta2 = mysqli_query($db, $sql);
     }
 }
@@ -110,27 +95,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
 <!DOCTYPE html>
 <html lang="es" class="particlesbody">
 	<head>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
-    <script src="lib/js/jquery.min.js"></script>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/bootstrap.min.css">
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-    <script src="lib/js/bootstrap.min.js"></script>
-    <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/jquery-ui.css">
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
-    <script src="lib/js/jquery-ui.min.js"></script>
-
-		<link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
-    <!--<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/amaticSC-font.css">
-    <!--<link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/icono.min.css">
-
-    <link rel='shortcut icon' type='image/x-icon' href='img/note-icon.png' />
-		<title>MUSIC OF THE SPHERES</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <?php require('head.html'); ?>
 	</head>
 
 	<body id="mainbody" class="particlesbody">

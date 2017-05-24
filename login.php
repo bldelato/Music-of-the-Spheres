@@ -30,7 +30,7 @@ else {
     // Si se ha rellenado el formulario
     $name = $_POST['usuario'];
     $password = $_POST['password'];
-    $sql = "SELECT * FROM users WHERE id='$name'";
+    $sql = "SELECT * FROM usuarios WHERE id='$name'";
     $consulta = mysqli_query($db, $sql);
     $fila = mysqli_fetch_assoc($consulta);
 
@@ -87,25 +87,7 @@ function mostrar_errorpassword() {
 <!DOCTYPE html>
 <html lang="es" class="particlesbody">
 	<head>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
-    <script src="lib/js/jquery.min.js"></script>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/bootstrap.min.css">
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-    <script src="lib/js/bootstrap.min.js"></script>
-    <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/jquery-ui.css">
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
-    <script src="lib/js/jquery-ui.min.js"></script>
-
-		<link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
-		<!--<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/amaticSC-font.css">
-
-    <link rel='shortcut icon' type='image/x-icon' href='img/note-icon.png' />
-		<title>MUSIC OF THE SPHERES</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <?php require('head.html'); ?>
 	</head>
 	<body class="particlesbody">
 		<!-- particles.js container -->

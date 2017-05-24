@@ -1,23 +1,5 @@
 <?php
-/* CONECTARSE A LA BASE DE DATOS */
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-session_start();
-$db = mysqli_connect('localhost', 'musicofthesphere', 'adminMS', 'musicofthesphere');
-if (!$db) {
-    die('Error al conectarse con la base de datos');
-}
-
-/* ADMINISTRAR EL USUARIO */
-
-$user = false;
-
-if (!empty($_SESSION['user'])) {
-    $user = $_SESSION['user'];
-} else {
-    header('Location: login.php');
-}
+  require('init.php');
 
 /* VARIABLES DE CONTROL DE ERRORES/FINALIZACIÓN */
 
@@ -29,16 +11,10 @@ $repeatedtitle=false;
 $repeatedtype=false;
 
 /* ADMINISTRAR GRUPOS */
-
-$sql = "SELECT * FROM `groups`";
-$consulta = mysqli_query($db, $sql);
 $grupos=[];
 $grouptitles =[];
 
-while ($row = mysqli_fetch_assoc($consulta)) {
-    $grupos[] = $row;
-    $grouptitles[]=$row['title'];
-}
+refrescar_grupos($grupos, $grouptitles);
 
 /* CREAR UN GRUPO */
 
@@ -55,7 +31,7 @@ if (!empty($_POST['complete']) && $_POST['complete']=='completeformgroup') {
     }
     // Se crea el grupo
     else {
-        $sql = "INSERT INTO groups(title, type, minage, maxage) VALUES ('$titulo','$tipo','$minage','$maxage')";
+        $sql = "INSERT INTO grupos(title, type, minage, maxage) VALUES ('$titulo','$tipo','$minage','$maxage')";
         $consulta = mysqli_query($db, $sql);
         if (!$consulta) {
             $notcreated= true;
@@ -63,22 +39,15 @@ if (!empty($_POST['complete']) && $_POST['complete']=='completeformgroup') {
             $groupcreated = true;
 
         // Se comprueba los usuarios que podrían pertenecer a ese grupo
-        $sql = "SELECT users.id FROM users, musictypes WHERE age >='$minage' AND age<='$maxage' AND musictypes.id=users.id AND musictypes.type='$tipo'";
+        $sql = "SELECT usuarios.id FROM usuarios, musictypes WHERE age >='$minage' AND age<='$maxage' AND musictypes.id=usuarios.id AND musictypes.type='$tipo'";
         $consulta = mysqli_query($db, $sql);
         while ($row = mysqli_fetch_assoc($consulta)) {
-            $sql="INSERT INTO groupsrelation(grouptitle, iduser) VALUES ('$titulo','{$row['id']}')";
+            $sql="INSERT INTO relacion_usuario_grupo(grouptitle, iduser) VALUES ('$titulo','{$row['id']}')";
             $consulta2 = mysqli_query($db, $sql);
         }
 
         // Se refresca la lista de grupos
-        $sql = "SELECT * FROM `groups`";
-        $consulta = mysqli_query($db, $sql);
-        $grupos=[];
-        $grouptitles =[];
-        while ($row = mysqli_fetch_assoc($consulta)) {
-            $grupos[] = $row;
-            $grouptitles[]=$row['title'];
-        }
+        refrescar_grupos($grupos, $grouptitles);
       }
     }
   } else {
@@ -91,29 +60,17 @@ if (!empty($_POST['complete']) && $_POST['complete']=='completeformgroup') {
 if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminargrupo' && !empty($_POST['grupoparaeliminar'])) {
     $title = $_POST['grupoparaeliminar'];
 
-    $sql = "DELETE FROM `groups` WHERE title='$title'";
+    $sql = "DELETE FROM `grupos` WHERE title='$title'";
     $consulta = mysqli_query($db, $sql);
 
-  // Se refresca la lista de grupos
-  $sql = "SELECT * FROM `groups`";
-    $consulta = mysqli_query($db, $sql);
-    $grupos=[];
-    $grouptitles =[];
-    while ($row = mysqli_fetch_assoc($consulta)) {
-        $grupos[] = $row;
-        $grouptitles[]=$row['title'];
-    }
+    // Se refresca la lista de grupos
+    refrescar_grupos($grupos, $grouptitles);
 }
 
 /* ADMINISTRAR ESTILOS DE MÚSICA */
 
-$sql = "SELECT type FROM `typesmusic`";
-$consulta = mysqli_query($db, $sql);
 $musictypes=[];
-
-while ($row = mysqli_fetch_assoc($consulta)) {
-    $musictypes[] = $row['type'];
-}
+refrescar_estilos($musictypes);
 
 /* CREAR UN ESTILO */
 
@@ -135,13 +92,7 @@ if (!empty($_POST['complete']) && $_POST['complete']=='completeformtype') {
             $typecreated = true;
 
         // Se refresca la lista de estilos
-        $sql = "SELECT DISTINCT type FROM `typesmusic`";
-            $consulta = mysqli_query($db, $sql);
-            $musictypes=[];
-
-            while ($row = mysqli_fetch_assoc($consulta)) {
-                $musictypes[] = $row['type'];
-            }
+        refrescar_estilos($musictypes);
         }
     }
     } else {
@@ -157,20 +108,13 @@ if (!empty($_POST['eliminar']) && $_POST['eliminar']=='eliminarestilo' && !empty
     $sql = "DELETE FROM `typesmusic` WHERE type='$typemusic'";
     $consulta = mysqli_query($db, $sql);
 
-  // Se refresca la lista de estilos
-  $sql = "SELECT DISTINCT type FROM `typesmusic`";
-    $consulta = mysqli_query($db, $sql);
-    $musictypes=[];
-
-    while ($row = mysqli_fetch_assoc($consulta)) {
-        $musictypes[] = $row['type'];
-    }
+    // Se refresca la lista de estilos
+    refrescar_estilos($musictypes);
 }
 
 /* FUNCIONES */
 
-function mostrar_errornotcreated()
-{
+function mostrar_errornotcreated() {
     echo '<div class="modal fade myModal" role="dialog" id="modalnotcreated">
   	<div class="modal-dialog">
   		<div class="modal-content">
@@ -193,8 +137,7 @@ function mostrar_errornotcreated()
   </div>';
 }
 
-function mostrar_groupcreated()
-{
+function mostrar_groupcreated() {
     echo '<div class="modal fade myModal" role="dialog" id="modalgroupcreated">
   	<div class="modal-dialog">
   		<div class="modal-content">
@@ -217,8 +160,7 @@ function mostrar_groupcreated()
   </div>';
 }
 
-  function mostrar_typecreated()
-  {
+  function mostrar_typecreated(){
       echo '<div class="modal fade myModal" role="dialog" id="modaltypecreated">
     	<div class="modal-dialog">
     		<div class="modal-content">
@@ -241,8 +183,7 @@ function mostrar_groupcreated()
     </div>';
   }
 
-function mostrar_errornotcomplete()
-{
+function mostrar_errornotcomplete() {
     echo '<div class="modal fade myModal" role="dialog" id="modalnotcomplete">
   	<div class="modal-dialog">
   		<div class="modal-content">
@@ -265,8 +206,7 @@ function mostrar_errornotcomplete()
   </div>';
 }
 
-function mostrar_repeatedtitle()
-{
+function mostrar_repeatedtitle() {
     echo '<div class="modal fade myModal" role="dialog" id="modalrepeatedtitle">
   	<div class="modal-dialog">
   		<div class="modal-content">
@@ -317,27 +257,7 @@ function mostrar_repeatedtype()
 <!DOCTYPE html>
 <html lang="es">
 	<head>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
-    <script src="lib/js/jquery.min.js"></script>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/bootstrap.min.css">
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-    <script src="lib/js/bootstrap.min.js"></script>
-    <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/jquery-ui.css">
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
-    <script src="lib/js/jquery-ui.min.js"></script>
-
-		<link rel="stylesheet" media="screen" type="text/css" href="css/style.css">
-    <!--<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/amaticSC-font.css">
-    <!--<link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">-->
-    <link rel="stylesheet" media="screen" type="text/css" href="lib/css/icono.min.css">
-
-    <link rel='shortcut icon' type='image/x-icon' href='img/note-icon.png' />
-		<title>MUSIC OF THE SPHERES</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <?php require('head.html'); ?>
 	</head>
 
 	<body id="mainbody">
