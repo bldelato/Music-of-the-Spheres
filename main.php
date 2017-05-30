@@ -39,11 +39,11 @@ if (!empty($_POST['añadir']) && $_POST['añadir']=='añadirtipo' && !empty($_PO
 
   // Añadimos al usuario a los grupos de música relacionados con el nuevo estilo
   $sql="SELECT grupos.title FROM grupos, usuarios, musictypes WHERE usuarios.id = '$user' AND usuarios.age>=minage AND usuarios.age<=maxage AND musictypes.id=usuarios.id AND musictypes.type='$type' AND grupos.type='$type'";
-    $consulta = mysqli_query($db, $sql);
-    while ($row = mysqli_fetch_assoc($consulta)) {
-        $sql="INSERT INTO relacion_usuario_grupo(grouptitle, iduser) VALUES ('{$row['title']}', '$user')";
-        $consulta2 = mysqli_query($db, $sql);
-    }
+  $consulta = mysqli_query($db, $sql);
+  while ($row = mysqli_fetch_assoc($consulta)) {
+      $sql="INSERT INTO relacion_usuario_grupo(grouptitle, iduser) VALUES ('{$row['title']}', '$user')";
+      $consulta2 = mysqli_query($db, $sql);
+  }
 }
 
 /* SACAMOS LOS MENSAJES PERSONALES DEL USUARIO PARA LAS NOTIFICACIONES */
@@ -102,7 +102,7 @@ while ($row = mysqli_fetch_assoc($consulta)) {
     <!-- BARRA SUPERIOR -->
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-          <li><a href="#"  class="navbar-element navbar-main-title barraBasica">Home</a></li>
+          <li><span class="navbar-element navbar-main-title barraBasica defaultcursor">Home</span></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li  class="iconos-nav"><a data-toggle="collapse" href="#collapseperfil" title="Perfil"><i class="icono-user"></i></a></li>
